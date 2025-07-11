@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { Navigate, createBrowserRouter } from "react-router-dom";
-import { SignIn, DashBoard } from "src/pages";
+import { SignIn, DashBoard, Category } from "src/pages";
 import { Layout } from "src/components";
 // import { Users, Products, Categories, Orders } from "src/pages";
 
@@ -9,6 +9,7 @@ interface PrivateRouteProps {
 }
 export const PrivateRoute = ({ children }: PrivateRouteProps) => {
   const token = localStorage.getItem("access_token");
+  // return children;
   return token ? children : <Navigate to="/login" />;
 };
 
@@ -21,6 +22,7 @@ export const publicRoutes = [
 export const privateRoutes = [
   { path: "/", element: <DashBoard /> },
   // { path: "/users", element: <Users /> },
+  { path: "/categoria", element: <Category /> },
   // { path: "/products", element: <Products /> },
   // adicione mais conforme necessário
 ];

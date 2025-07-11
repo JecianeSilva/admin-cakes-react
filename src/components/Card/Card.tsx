@@ -3,7 +3,7 @@ import Typography from "@mui/material/Typography";
 import { ICardProps } from "./Card.types";
 import { StyledCard } from "./CardStyled";
 
-const Card = ({
+export const Card = ({
   children,
   title,
   description,
@@ -36,5 +36,3 @@ const Card = ({
     </StyledCard>
   );
 };
-
-export default Card;

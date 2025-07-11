@@ -1,8 +1,7 @@
 import * as React from "react";
-import { Container } from "../../components/Container/Container";
-import Card from "../../components/Card/Card";
-import { SignInForm } from "./SignInForm/SignInForm";
 import { Box } from "@mui/material";
+import { Container, Card } from "src/components";
+import { SignInForm } from "./SignInForm";
 export function SignIn(): React.JSX.Element {
   return (
     <Container direction="row" sx={{ height: "100%" }}>

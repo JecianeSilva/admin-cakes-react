@@ -1,7 +1,4 @@
-import * as React from "react";
-import { styled } from "@mui/material/styles";
 import Avatar from "@mui/material/Avatar";
-import MuiDrawer, { drawerClasses } from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
@@ -10,21 +7,10 @@ import Typography from "@mui/material/Typography";
 // import CardAlert from "./CardAlert";
 import MenuContent from "../MenuContent/MenuContent";
 import MenuList from "../MenuList/MenuList";
+import { Drawer } from "./SideBarStyled";
+import { ISideBarProps } from "./SiderBar.types";
 
-const drawerWidth = 240;
-
-const Drawer = styled(MuiDrawer)({
-  width: drawerWidth,
-  flexShrink: 0,
-  boxSizing: "border-box",
-  mt: 10,
-  [`& .${drawerClasses.paper}`]: {
-    width: drawerWidth,
-    boxSizing: "border-box",
-  },
-});
-
-export default function SideBar() {
+export default function SideBar({ user, children }: ISideBarProps) {
   return (
     <Drawer variant="permanent" sx={{ display: { xs: "none", md: "block" } }}>
       {/* <Box
@@ -48,9 +34,8 @@ export default function SideBar() {
         }}
       >
         <Avatar
-          sizes="small"
-          alt="John Doe"
-          src="/static/images/avatar/7.jpg"
+          alt={user.name}
+          src={user.imageUrl}
           sx={{
             width: 36,
             height: 36,
@@ -63,10 +48,10 @@ export default function SideBar() {
             variant="body2"
             sx={{ fontWeight: 500, lineHeight: "16px" }}
           >
-            John Doe
+            {user.name}
           </Typography>
           <Typography variant="caption" sx={{ color: "text.secondary" }}>
-            doe@example.com
+            {user.email}
           </Typography>
         </Box>
         <MenuList />
@@ -80,8 +65,7 @@ export default function SideBar() {
           flexDirection: "column",
         }}
       >
-        <MenuContent />
-        {/* <CardAlert /> */}
+        {children}
       </Box>
     </Drawer>
   );

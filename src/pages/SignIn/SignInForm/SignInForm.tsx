@@ -1,9 +1,8 @@
 import React, { useState } from "react";
+import { AxiosError } from "axios";
 import {
   Alert,
   Box,
-  Button,
-  Divider,
   FormControl,
   FormLabel,
   Link,
@@ -13,11 +12,10 @@ import {
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { IPostLoginResponse, TPostLoginRequestBody } from "cakes-lib-types-js";
-import { useFetchPostLogin } from "../../../mutations/useFetchPostLogin/useFetchPostLogin";
-import { useLoginFormStore } from "./store/useLoginFormStore/useLoginForm.store";
-import { useValidationFormLogin } from "./hook/useValidationFormLogin/useValidationFormLogin";
-import { setLocalStorage } from "../../../utils/localStorage";
-import { AxiosError } from "axios";
+import { useFetchPostLogin } from "src/mutations";
+import { setLocalStorage } from "src/utils";
+import { useValidationFormLogin } from "./hook";
+import { useLoginFormStore } from "./store";
 
 export function SignInForm(): React.JSX.Element {
   const { email, setEmail, password, setPassword, reset } = useLoginFormStore();
