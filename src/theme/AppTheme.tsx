@@ -10,7 +10,7 @@ import { dataDisplayCustomizations } from "./customizations/dataDisplay";
 import { feedbackCustomizations } from "./customizations/feedback";
 import { navigationCustomizations } from "./customizations/navigation";
 import { surfacesCustomizations } from "./customizations/surfaces";
-import { colorSchemes, typography, shadows, shape } from "./themePrimitives";
+import { getDesignTokens } from "./themePrimitives";
 
 import { AppThemeProps } from "./AppTheme.types";
 
@@ -22,10 +22,7 @@ export default function AppTheme({
 }: AppThemeProps & Omit<ThemeProviderProps, "theme">) {
   const theme = React.useMemo(() => {
     return createTheme({
-      palette: colorSchemes[mode].palette,
-      typography,
-      shadows,
-      shape,
+      ...getDesignTokens(mode),
       components: {
         ...inputsCustomizations,
         ...dataDisplayCustomizations,

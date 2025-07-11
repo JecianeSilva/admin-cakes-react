@@ -11,6 +11,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 import { IPostLoginResponse, TPostLoginRequestBody } from "cakes-lib-types-js";
 import { useFetchPostLogin } from "../../../mutations/useFetchPostLogin/useFetchPostLogin";
 import { useLoginFormStore } from "./store/useLoginFormStore/useLoginForm.store";
@@ -126,46 +127,42 @@ export function SignInForm(): React.JSX.Element {
         />
       </FormControl>
       <Link
-        component="button"
-        type="button"
-        onClick={handleForgotPassword}
+        href="/forgot-password"
         variant="body1"
-        sx={{ display: "flex", width: "100%", justifyContent: "flex-end" }}
+        sx={{ alignSelf: "flex-end" }}
       >
         Esqueci a senha
       </Link>
-      <Button
+      <LoadingButton
         type="submit"
         fullWidth
         variant="contained"
         color="primary"
-        disabled={isLoading}
         loading={isLoading}
       >
         Entrar
-      </Button>
+      </LoadingButton>
 
-      <Divider>or</Divider>
-
-      <Typography sx={{ textAlign: "center" }}>
-        Don&apos;t have an account?{" "}
-        {/* <Link
-          href="/material-ui/getting-started/templates/sign-in/"
-          variant="body2"
-          sx={{ alignSelf: "center" }}
-        >
-          Sign up
-        </Link> */}
-      </Typography>
-      <Button
-        type="button"
-        fullWidth
-        onClick={() => {}}
-        variant="outlined"
-        color="primary"
+      <Box sx={{ mt: 4, display: "flex", flexDirection: "column", gap: 2 }}>
+        <Typography sx={{ textAlign: "center" }}>
+          Não tem cadastro?{" "}
+          <Link href="/register" variant="body1">
+            Cadastre-se agora
+          </Link>
+        </Typography>
+      </Box>
+      <Typography
+        variant="caption"
+        sx={{
+          textAlign: "center",
+          color: "text.secondary",
+          mt: 4,
+          fontSize: 12,
+        }}
       >
-        Cadastre-se
-      </Button>
+        © {new Date().getFullYear()} Sistema de Pedidos. Todos os direitos
+        reservados.
+      </Typography>
       <Snackbar
         open={notification.open}
         autoHideDuration={3000}
@@ -175,7 +172,15 @@ export function SignInForm(): React.JSX.Element {
         <Alert
           onClose={() => setNotification({ ...notification, open: false })}
           severity={notification.severity}
-          sx={{ width: "100%", minWidth: "360px", backgroundColor: "#FFF" }}
+          sx={{
+            width: "100%",
+            minWidth: 360,
+            backgroundColor:
+              notification.severity === "error" ? "#E02041" : "#f25822",
+            color: "#fff",
+            fontWeight: 500,
+            borderRadius: 2,
+          }}
         >
           {notification.message}
         </Alert>

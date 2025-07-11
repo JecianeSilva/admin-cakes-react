@@ -12,9 +12,14 @@ export function SignIn(): React.JSX.Element {
         alt="Logo"
         sx={{
           height: 90,
+          width: "max-content",
         }}
       />
-      <Card variant="outlined" title="Login">
+      <Card
+        variant="outlined"
+        title="Área do gestor"
+        description="Acesse o painel para gerenciar seus pedidos com rapidez e praticidade."
+      >
         <SignInForm />
       </Card>
     </Container>

@@ -13,13 +13,22 @@ const Card = ({
     <StyledCard {...rest}>
       <Typography
         component="h2"
-        variant="h4"
-        sx={{ width: "100%", fontSize: "clamp(2rem, 10vw, 2.15rem)" }}
+        fontWeight={500}
+        sx={{
+          width: "100%",
+          textAlign: "center",
+          fontSize: "clamp(1.6rem, 4vw, 2rem)",
+        }}
       >
         {title}
       </Typography>
       {description && (
-        <Typography variant="body2" color="text.secondary" paragraph>
+        <Typography
+          color="text.secondary"
+          textAlign="center"
+          fontWeight={300}
+          mb={2}
+        >
           {description}
         </Typography>
       )}

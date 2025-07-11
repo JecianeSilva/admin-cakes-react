@@ -8,7 +8,7 @@ export const StyledCard = styled(MuiCard)(({ theme }) => ({
   width: "100%",
   minHeight: "560px",
   padding: theme.spacing(4, 2),
-  gap: theme.spacing(2),
+  gap: theme.spacing(1),
   border: "1px solid #fff",
   backgroundColor: theme.palette.background.default,
   borderRadius: theme.spacing(2),

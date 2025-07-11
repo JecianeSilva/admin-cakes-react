@@ -31,68 +31,68 @@ const defaultTheme = createTheme();
 const customShadows: Shadows = [...defaultTheme.shadows];
 
 export const brand = {
-  50: "hsl(210, 100%, 95%)",
-  100: "hsl(210, 100%, 92%)",
-  200: "hsl(210, 100%, 80%)",
-  300: "hsl(210, 100%, 65%)",
-  400: "hsl(210, 98%, 48%)",
-  500: "hsl(210, 98%, 42%)",
-  600: "hsl(210, 98%, 55%)",
-  700: "hsl(210, 100%, 35%)",
-  800: "hsl(210, 100%, 16%)",
-  900: "hsl(210, 100%, 21%)",
+  50: "#e9f4fb",
+  100: "#d3e9f7",
+  200: "#aad3ef",
+  300: "#70b8e4",
+  400: "#339ad9",
+  500: "#2b86bf",
+  600: "#246fa0",
+  700: "#1d5980",
+  800: "#153f59",
+  900: "#0d2a3b",
 };
 
 export const gray = {
-  50: "hsl(220, 35%, 97%)",
-  100: "hsl(220, 30%, 94%)",
-  200: "hsl(220, 20%, 88%)",
-  300: "hsl(220, 20%, 80%)",
-  400: "hsl(220, 20%, 65%)",
-  500: "hsl(220, 20%, 42%)",
-  600: "hsl(220, 20%, 35%)",
-  700: "hsl(220, 20%, 25%)",
-  800: "hsl(220, 30%, 6%)",
-  900: "hsl(220, 35%, 3%)",
+  50: "#f8f9fa",
+  100: "#f1f3f5",
+  200: "#e9ecef",
+  300: "#dee2e6",
+  400: "#ced4da",
+  500: "#adb5bd",
+  600: "#868e96",
+  700: "#495057",
+  800: "#343a40",
+  900: "#212529",
 };
 
 export const green = {
-  50: "hsl(120, 80%, 98%)",
-  100: "hsl(120, 75%, 94%)",
-  200: "hsl(120, 75%, 87%)",
-  300: "hsl(120, 61%, 77%)",
-  400: "hsl(120, 44%, 53%)",
-  500: "hsl(120, 59%, 30%)",
-  600: "hsl(120, 70%, 25%)",
-  700: "hsl(120, 75%, 16%)",
-  800: "hsl(120, 84%, 10%)",
-  900: "hsl(120, 87%, 6%)",
+  50: "#effaf3",
+  100: "#d7f4e3",
+  200: "#a9e8c5",
+  300: "#74db9d",
+  400: "#3bce75",
+  500: "#27b96a",
+  600: "#209a58",
+  700: "#197c47",
+  800: "#115e35",
+  900: "#0b4024",
 };
 
 export const orange = {
-  50: "hsl(45, 100%, 97%)",
-  100: "hsl(45, 92%, 90%)",
-  200: "hsl(45, 94%, 80%)",
-  300: "hsl(45, 90%, 65%)",
-  400: "hsl(45, 90%, 40%)",
-  500: "hsl(45, 90%, 35%)",
-  600: "hsl(45, 91%, 25%)",
-  700: "hsl(45, 94%, 20%)",
-  800: "hsl(45, 95%, 16%)",
-  900: "hsl(45, 93%, 12%)",
+  50: "#fff3ee",
+  100: "#ffe0d6",
+  200: "#ffc2ad",
+  300: "#ffa07f",
+  400: "#f97d50",
+  500: "#f25822",
+  600: "#df4f1f",
+  700: "#bf431a",
+  800: "#993616",
+  900: "#702911",
 };
 
 export const red = {
-  50: "hsl(0, 100%, 97%)",
-  100: "hsl(0, 92%, 90%)",
-  200: "hsl(0, 94%, 80%)",
-  300: "hsl(0, 90%, 65%)",
-  400: "hsl(0, 90%, 40%)",
-  500: "hsl(0, 90%, 30%)",
-  600: "hsl(0, 91%, 25%)",
-  700: "hsl(0, 94%, 18%)",
-  800: "hsl(0, 95%, 12%)",
-  900: "hsl(0, 93%, 6%)",
+  50: "#fff0f2",
+  100: "#ffd6db",
+  200: "#ffadb7",
+  300: "#ff7d8f",
+  400: "#f85768",
+  500: "#e02041",
+  600: "#c41c39",
+  700: "#a01831",
+  800: "#7d1328",
+  900: "#5a0e1f",
 };
 
 export const getDesignTokens = (mode: PaletteMode) => {
@@ -101,87 +101,60 @@ export const getDesignTokens = (mode: PaletteMode) => {
       ? "hsla(220, 30%, 5%, 0.7) 0px 4px 16px 0px, hsla(220, 25%, 10%, 0.8) 0px 8px 16px -5px"
       : "hsla(220, 30%, 5%, 0.07) 0px 4px 16px 0px, hsla(220, 25%, 10%, 0.07) 0px 8px 16px -5px";
 
-  return {
+  return createTheme({
     palette: {
       mode,
       primary: {
-        light: brand[200],
-        main: brand[400],
-        dark: brand[700],
-        contrastText: brand[50],
-        ...(mode === "dark" && {
-          contrastText: brand[50],
-          light: brand[300],
-          main: brand[400],
-          dark: brand[700],
-        }),
+        ...orange,
+        light: orange[300],
+        main: orange[500],
+        dark: orange[700],
+        contrastText: "#ffffff",
+      },
+      secondary: {
+        main: "#0E1418",
+        contrastText: "#ffffff",
+        light: gray[700],
+        dark: "#000000",
       },
       info: {
+        ...brand,
         light: brand[100],
-        main: brand[300],
-        dark: brand[600],
+        main: brand[400],
+        dark: brand[700],
         contrastText: gray[50],
-        ...(mode === "dark" && {
-          contrastText: brand[300],
-          light: brand[500],
-          main: brand[700],
-          dark: brand[900],
-        }),
       },
       warning: {
+        ...orange,
         light: orange[300],
         main: orange[400],
-        dark: orange[800],
-        ...(mode === "dark" && {
-          light: orange[400],
-          main: orange[500],
-          dark: orange[700],
-        }),
+        dark: orange[700],
       },
       error: {
+        ...red,
         light: red[300],
-        main: red[400],
-        dark: red[800],
-        ...(mode === "dark" && {
-          light: red[400],
-          main: red[500],
-          dark: red[700],
-        }),
+        main: red[500],
+        dark: red[700],
       },
       success: {
+        ...green,
         light: green[300],
-        main: green[400],
-        dark: green[800],
-        ...(mode === "dark" && {
-          light: green[400],
-          main: green[500],
-          dark: green[700],
-        }),
+        main: green[500],
+        dark: green[700],
       },
-      grey: {
-        ...gray,
-      },
+      grey: { ...gray },
       divider: mode === "dark" ? alpha(gray[700], 0.6) : alpha(gray[300], 0.4),
       background: {
-        default: "hsl(0, 0%, 99%)",
-        paper: "hsl(220, 35%, 97%)",
-        ...(mode === "dark" && {
-          default: gray[900],
-          paper: "hsl(220, 30%, 7%)",
-        }),
+        default: mode === "dark" ? gray[900] : "#fefefe",
+        paper: mode === "dark" ? "#0c0f11" : gray[50],
       },
       text: {
-        primary: gray[800],
-        secondary: gray[600],
-        warning: orange[400],
-        ...(mode === "dark" && {
-          primary: "hsl(0, 0%, 100%)",
-          secondary: gray[400],
-        }),
+        primary: mode === "dark" ? "#FDF5F2" : "#0E1418",
+        secondary: mode === "dark" ? "#DDDDDE" : "#666666",
       },
       action: {
         hover: alpha(gray[200], 0.2),
-        selected: `${alpha(gray[200], 0.3)}`,
+        selected: alpha(gray[200], 0.3),
         ...(mode === "dark" && {
           hover: alpha(gray[600], 0.2),
           selected: alpha(gray[600], 0.3),
@@ -191,222 +164,25 @@ export const getDesignTokens = (mode: PaletteMode) => {
     typography: {
       fontFamily: "Inter, sans-serif",
       h1: {
-        fontSize: defaultTheme.typography.pxToRem(48),
+        fontSize: "3rem",
         fontWeight: 600,
         lineHeight: 1.2,
         letterSpacing: -0.5,
       },
-      h2: {
-        fontSize: defaultTheme.typography.pxToRem(36),
-        fontWeight: 600,
-        lineHeight: 1.2,
-      },
-      h3: {
-        fontSize: defaultTheme.typography.pxToRem(30),
-        lineHeight: 1.2,
-      },
-      h4: {
-        fontSize: defaultTheme.typography.pxToRem(24),
-        fontWeight: 600,
-        lineHeight: 1.5,
-      },
-      h5: {
-        fontSize: defaultTheme.typography.pxToRem(20),
-        fontWeight: 600,
-      },
-      h6: {
-        fontSize: defaultTheme.typography.pxToRem(18),
-        fontWeight: 600,
-      },
-      subtitle1: {
-        fontSize: defaultTheme.typography.pxToRem(18),
-      },
-      subtitle2: {
-        fontSize: defaultTheme.typography.pxToRem(14),
-        fontWeight: 500,
-      },
-      body1: {
-        fontSize: defaultTheme.typography.pxToRem(14),
-      },
-      body2: {
-        fontSize: defaultTheme.typography.pxToRem(14),
-        fontWeight: 400,
-      },
-      caption: {
-        fontSize: defaultTheme.typography.pxToRem(12),
-        fontWeight: 400,
-      },
+      h2: { fontSize: "2.25rem", fontWeight: 600, lineHeight: 1.2 },
+      h3: { fontSize: "1.875rem", lineHeight: 1.2 },
+      h4: { fontSize: "1.5rem", fontWeight: 600, lineHeight: 1.5 },
+      h5: { fontSize: "1.25rem", fontWeight: 600 },
+      h6: { fontSize: "1.125rem", fontWeight: 600 },
+      subtitle1: { fontSize: "1.125rem" },
+      subtitle2: { fontSize: "0.875rem", fontWeight: 500 },
+      body1: { fontSize: "0.875rem" },
+      body2: { fontSize: "0.875rem", fontWeight: 400 },
+      caption: { fontSize: "0.75rem", fontWeight: 400 },
     },
     shape: {
       borderRadius: 8,
     },
     shadows: customShadows,
-  };
+  });
 };
-
-export const colorSchemes = {
-  light: {
-    palette: {
-      primary: {
-        main: "#f25822",
-        dark: "#0E1317",
-        light: "#f2683f",
-        contrastText: "#ffffff",
-      },
-      info: {
-        light: brand[100],
-        main: brand[300],
-        dark: brand[600],
-        contrastText: gray[50],
-      },
-      warning: {
-        light: orange[300],
-        main: orange[400],
-        dark: orange[800],
-      },
-      error: {
-        light: red[300],
-        main: red[400],
-        dark: red[800],
-      },
-      success: {
-        light: green[300],
-        main: green[400],
-        dark: green[800],
-      },
-      grey: {
-        ...gray,
-      },
-      divider: alpha(gray[300], 0.4),
-      background: {
-        default: "hsl(0, 0%, 99%)",
-        paper: "hsl(220, 35%, 97%)",
-      },
-      text: {
-        primary: gray[800],
-        secondary: gray[600],
-        warning: orange[400],
-      },
-      action: {
-        hover: "#0E1317",
-        selected: "#0E1317",
-        focus: "#f25822",
-        active: "#f25822",
-        hoverOpacity: 0.08,
-      },
-      baseShadow:
-        "hsla(220, 30%, 5%, 0.07) 0px 4px 16px 0px, hsla(220, 25%, 10%, 0.07) 0px 8px 16px -5px",
-    },
-  },
-  dark: {
-    palette: {
-      primary: {
-        contrastText: brand[50],
-        light: brand[300],
-        main: brand[400],
-        dark: brand[700],
-      },
-      info: {
-        contrastText: brand[300],
-        light: brand[500],
-        main: brand[700],
-        dark: brand[900],
-      },
-      warning: {
-        light: orange[400],
-        main: orange[500],
-        dark: orange[700],
-      },
-      error: {
-        light: red[400],
-        main: red[500],
-        dark: red[700],
-      },
-      success: {
-        light: green[400],
-        main: green[500],
-        dark: green[700],
-      },
-      grey: {
-        ...gray,
-      },
-      divider: alpha(gray[700], 0.6),
-      background: {
-        default: gray[900],
-        paper: "hsl(220, 30%, 7%)",
-      },
-      text: {
-        primary: "hsl(0, 0%, 100%)",
-        secondary: gray[400],
-      },
-      action: {
-        hover: alpha(gray[600], 0.2),
-        selected: alpha(gray[600], 0.3),
-      },
-      baseShadow:
-        "hsla(220, 30%, 5%, 0.7) 0px 4px 16px 0px, hsla(220, 25%, 10%, 0.8) 0px 8px 16px -5px",
-    },
-  },
-};
-
-export const typography = {
-  fontFamily: "Inter, sans-serif",
-  h1: {
-    fontSize: defaultTheme.typography.pxToRem(48),
-    fontWeight: 600,
-    lineHeight: 1.2,
-    letterSpacing: -0.5,
-  },
-  h2: {
-    fontSize: defaultTheme.typography.pxToRem(36),
-    fontWeight: 600,
-    lineHeight: 1.2,
-  },
-  h3: {
-    fontSize: defaultTheme.typography.pxToRem(30),
-    lineHeight: 1.2,
-  },
-  h4: {
-    fontSize: defaultTheme.typography.pxToRem(24),
-    fontWeight: 600,
-    lineHeight: 1.5,
-  },
-  h5: {
-    fontSize: defaultTheme.typography.pxToRem(20),
-    fontWeight: 600,
-  },
-  h6: {
-    fontSize: defaultTheme.typography.pxToRem(18),
-    fontWeight: 600,
-  },
-  subtitle1: {
-    fontSize: defaultTheme.typography.pxToRem(18),
-  },
-  subtitle2: {
-    fontSize: defaultTheme.typography.pxToRem(14),
-    fontWeight: 500,
-  },
-  body1: {
-    fontSize: defaultTheme.typography.pxToRem(14),
-  },
-  body2: {
-    fontSize: defaultTheme.typography.pxToRem(14),
-    fontWeight: 400,
-  },
-  caption: {
-    fontSize: defaultTheme.typography.pxToRem(12),
-    fontWeight: 400,
-  },
-};
-
-export const shape = {
-  borderRadius: 8,
-};
-
-// @ts-ignore
-const defaultShadows: Shadows = [
-  "none",
-  "var(--template-palette-baseShadow)",
-  ...defaultTheme.shadows.slice(2),
-];
-export const shadows = defaultShadows;

@@ -26,15 +26,7 @@ const Drawer = styled(MuiDrawer)({
 
 export default function SideBar() {
   return (
-    <Drawer
-      variant="permanent"
-      sx={{
-        display: { xs: "none", md: "block" },
-        [`& .${drawerClasses.paper}`]: {
-          backgroundColor: "background.paper",
-        },
-      }}
-    >
+    <Drawer variant="permanent" sx={{ display: { xs: "none", md: "block" } }}>
       {/* <Box
         sx={{
           display: "flex",
@@ -59,7 +51,12 @@ export default function SideBar() {
           sizes="small"
           alt="John Doe"
           src="/static/images/avatar/7.jpg"
-          sx={{ width: 36, height: 36 }}
+          sx={{
+            width: 36,
+            height: 36,
+            backgroundColor: "rgba(255,255,255,0.3)",
+            color: "text.primary",
+          }}
         />
         <Box sx={{ mr: "auto" }}>
           <Typography

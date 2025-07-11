@@ -32,6 +32,8 @@ export const inputsCustomizations: Components<Theme> = {
       root: {
         textTransform: "none",
         fontWeight: 600,
+        padding: "0.75rem 1rem",
+        borderRadius: 8,
       },
       containedPrimary: {
         backgroundColor: "#f25822",
@@ -199,37 +201,45 @@ export const inputsCustomizations: Components<Theme> = {
       root: {
         border: "none",
       },
-      input: {
+      input: ({ theme }) => ({
         "&::placeholder": {
           opacity: 0.7,
-          color: gray[500],
+          color: theme.palette.grey[600],
         },
-      },
+      }),
     },
   },
   MuiOutlinedInput: {
     styleOverrides: {
-      input: {
+      input: ({ theme }) => ({
         padding: 0,
-      },
+        "&:-webkit-autofill": {
+          boxShadow: `0 0 0 1000px ${theme.palette.background.default} inset !important`,
+          WebkitTextFillColor: theme.palette.text.primary,
+          caretColor: theme.palette.text.primary,
+          transition: "background-color 9999s ease-out 0s !important",
+          borderRadius: 0,
+        },
+      }),
       root: ({ theme }) => ({
-        padding: "12px 16px",
         borderRadius: theme.shape.borderRadius,
-        color: theme.palette.text.primary,
-        border: `1px solid ${theme.palette.divider}`,
         backgroundColor: theme.palette.background.default,
-        transition: "border 120ms ease-in",
-        "&:hover .MuiOutlinedInput-notchedOutline": {
+        border: `1px solid ${theme.palette.grey[400]}`,
+        padding: "0.75rem 1rem",
+        transition: "border-color 0.2s ease-in-out",
+        "&:hover": {
+          borderColor: theme.palette.grey[600],
+        },
+        "&.Mui-focused": {
           borderColor: theme.palette.primary.main,
         },
-        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-          borderColor: theme.palette.primary.main,
+        "& .MuiOutlinedInput-notchedOutline": {
+          border: "none",
         },
-        ...theme.applyStyles("dark", {
-          "&:hover": {
-            borderColor: gray[500],
-          },
-        }),
+        "&:-webkit-autofill": {
+          boxShadow: `0 0 0 1000px ${theme.palette.background.default} inset !important`,
+          borderRadius: 0,
+        },
       }),
       notchedOutline: ({ theme }) => ({
         borderColor: theme.palette.divider,
@@ -250,7 +260,15 @@ export const inputsCustomizations: Components<Theme> = {
     styleOverrides: {
       root: ({ theme }) => ({
         typography: theme.typography.caption,
-        marginBottom: 8,
+        marginBottom: 2,
+        color: theme.palette.grey[800],
+        fontWeight: 500,
+        "&.Mui-focused": {
+          color: theme.palette.primary.main,
+        },
+        "&.Mui-error": {
+          color: theme.palette.error.main,
+        },
       }),
     },
   },

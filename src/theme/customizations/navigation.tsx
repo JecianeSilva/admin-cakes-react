@@ -80,25 +80,36 @@ export const navigationCustomizations: Components<Theme> = {
     },
     styleOverrides: {
       root: ({ theme }) => ({
+        display: "inline-flex",
+        alignItems: "center",
         color: theme.palette.text.primary,
         fontWeight: 500,
-        position: "relative",
+        fontSize: theme.typography.body2.fontSize,
         textDecoration: "none",
+        position: "relative",
         width: "fit-content",
+        transition: "color 0.2s ease",
+
         "&::before": {
           content: '""',
           position: "absolute",
-          width: "100%",
-          height: "1px",
           bottom: 0,
           left: 0,
+          height: "1px",
+          width: "100%",
           backgroundColor: theme.palette.text.secondary,
           opacity: 0.3,
-          transition: "width 0.3s ease, opacity 0.3s ease",
+          transition: "opacity 0.3s ease, background-color 0.3s ease",
         },
-        "&:hover::before": {
-          width: 0,
+
+        "&:hover": {
+          color: theme.palette.primary.main,
+          "&::before": {
+            backgroundColor: theme.palette.primary.main,
+            opacity: 1,
+          },
         },
+
         "&:focus-visible": {
           outline: `3px solid ${alpha(theme.palette.primary.main, 0.5)}`,
           outlineOffset: "4px",
@@ -110,7 +121,17 @@ export const navigationCustomizations: Components<Theme> = {
   MuiDrawer: {
     styleOverrides: {
       paper: ({ theme }) => ({
-        backgroundColor: theme.palette.background.default,
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.primary.contrastText,
+        "& .MuiListItemIcon-root": {
+          color: theme.palette.primary.contrastText,
+        },
+        "& .MuiTypography-root": {
+          color: theme.palette.primary.contrastText,
+        },
+        "& .MuiSvgIcon-root": {
+          color: theme.palette.primary.contrastText,
+        },
       }),
     },
   },
