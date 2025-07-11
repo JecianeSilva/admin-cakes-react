@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import { Navigate, createBrowserRouter } from "react-router-dom";
 import { SignIn, DashBoard, Category } from "src/pages";
 import { Layout } from "src/components";
+import { CreateCategoryForm } from "../pages/Category/CategoryCreation/CategoryCreation";
 // import { Users, Products, Categories, Orders } from "src/pages";
 
 interface PrivateRouteProps {
@@ -23,6 +24,8 @@ export const privateRoutes = [
   { path: "/", element: <DashBoard /> },
   // { path: "/users", element: <Users /> },
   { path: "/categoria", element: <Category /> },
+  { path: "/categoria/cadastrar", element: <CreateCategoryForm /> },
+  { path: "/categoria/editar", element: <CreateCategoryForm /> },
   // { path: "/products", element: <Products /> },
   // adicione mais conforme necessário
 ];
