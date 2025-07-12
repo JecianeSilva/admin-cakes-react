@@ -2,14 +2,15 @@ import React, { useState } from "react";
 import {
   Box,
   Button,
-  Checkbox,
-  FormControlLabel,
   FormLabel,
   Grid,
   OutlinedInput,
   Typography,
   Snackbar,
   Alert,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { authorizedApi } from "src/services";
@@ -17,15 +18,18 @@ import { authorizedApi } from "src/services";
 const FormGrid = styled(Grid)(() => ({
   display: "flex",
   flexDirection: "column",
+  gap: 4,
 }));
 
 export function CreateCategoryForm() {
   const [form, setForm] = useState({
     name: "",
     description: "",
-    isVisible: true,
+    status: "ACTIVATED", // novo campo status
   });
+
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [notification, setNotification] = useState({
     open: false,
     message: "",
@@ -34,13 +38,24 @@ export function CreateCategoryForm() {
 
   const handleChange =
     (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
-      const value = field === "isVisible" ? e.target.checked : e.target.value;
+      const value = e.target.value;
       setForm((prev) => ({ ...prev, [field]: value }));
     };
+
+  const handleStatusChange = (e: SelectChangeEvent) => {
+    setForm((prev) => ({ ...prev, status: e.target.value }));
+  };
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
     setImageFile(file);
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => setImagePreview(reader.result as string);
+      reader.readAsDataURL(file);
+    } else {
+      setImagePreview(null);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -49,7 +64,7 @@ export function CreateCategoryForm() {
     const formData = new FormData();
     formData.append("name", form.name);
     formData.append("description", form.description);
-    formData.append("isVisible", String(form.isVisible));
+    formData.append("status", form.status); // usado no backend como enum
     if (imageFile) {
       formData.append("image", imageFile);
     }
@@ -66,8 +81,10 @@ export function CreateCategoryForm() {
         message: "Categoria cadastrada com sucesso!",
         severity: "success",
       });
-      setForm({ name: "", description: "", isVisible: true });
+
+      setForm({ name: "", description: "", status: "ACTIVATED" });
       setImageFile(null);
+      setImagePreview(null);
     } catch (err) {
       setNotification({
         open: true,
@@ -84,7 +101,7 @@ export function CreateCategoryForm() {
           Cadastro de Categoria
         </Typography>
 
-        <Grid container spacing={3}>
+        <Grid container spacing={3} alignItems="flex-start">
           <FormGrid>
             <FormLabel required>Nome da Categoria</FormLabel>
             <OutlinedInput
@@ -99,6 +116,24 @@ export function CreateCategoryForm() {
           <FormGrid>
             <FormLabel>Imagem</FormLabel>
             <input type="file" accept="image/*" onChange={handleImageSelect} />
+            {imagePreview && (
+              <Box
+                mt={1}
+                sx={{
+                  width: 120,
+                  height: 80,
+                  borderRadius: 1,
+                  overflow: "hidden",
+                  border: "1px solid #ccc",
+                }}
+              >
+                <img
+                  src={imagePreview}
+                  alt="Preview"
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                />
+              </Box>
+            )}
           </FormGrid>
 
           <FormGrid>
@@ -114,20 +149,20 @@ export function CreateCategoryForm() {
           </FormGrid>
 
           <FormGrid>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={form.isVisible}
-                  onChange={handleChange("isVisible")}
-                />
-              }
-              label="Categoria visível"
-            />
+            <FormLabel>Status</FormLabel>
+            <Select
+              size="small"
+              value={form.status}
+              onChange={handleStatusChange}
+            >
+              <MenuItem value="ACTIVATED">Ativado</MenuItem>
+              <MenuItem value="DISABLED">Desativado</MenuItem>
+            </Select>
           </FormGrid>
 
-          <Grid>
-            <Button type="submit" variant="contained" color="primary">
-              Cadastrar Categoria
+          <Grid display="flex" alignItems="flex-end">
+            <Button type="submit" variant="contained" color="primary" fullWidth>
+              Cadastrar
             </Button>
           </Grid>
         </Grid>
@@ -135,7 +170,7 @@ export function CreateCategoryForm() {
 
       <Snackbar
         open={notification.open}
-        autoHideDuration={3000}
+        autoHideDuration={5000}
         onClose={() => setNotification({ ...notification, open: false })}
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       >
