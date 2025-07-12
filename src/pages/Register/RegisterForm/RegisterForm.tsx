@@ -11,16 +11,16 @@ import {
   Typography,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import { IPostLoginResponse, TPostLoginRequestBody } from "cakes-lib-types-js";
-import { useFetchPostLogin } from "src/mutations";
-import { setLocalStorage } from "src/utils";
-import { useValidationFormLogin } from "./hook";
-import { useLoginFormStore } from "./store";
+import { TPostRegisterRequestBody } from "cakes-lib-types-js";
+import { useFetchPostRegister } from "src/mutations";
+import { useValidationFormRegister } from "./hook";
+import { useRegisterFormStore } from "./store";
 
-export function SignInForm(): React.JSX.Element {
-  const { email, setEmail, password, setPassword, reset } = useLoginFormStore();
-  const { errors, validate } = useValidationFormLogin();
-  const { mutate, isLoading } = useFetchPostLogin();
+export function RegisterForm(): React.JSX.Element {
+  const { name, email, password, setName, setEmail, setPassword, reset } =
+    useRegisterFormStore();
+  const { errors, validate } = useValidationFormRegister();
+  const { mutate, isLoading } = useFetchPostRegister();
 
   const [notification, setNotification] = useState<{
     open: boolean;
@@ -32,50 +32,45 @@ export function SignInForm(): React.JSX.Element {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
+    const name = formData.get("name") as string;
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
-    const body: TPostLoginRequestBody = {
+    const body: TPostRegisterRequestBody = {
+      name,
       email,
       password,
     };
 
     if (validate(body)) {
       mutate(body, {
-        onSuccess: (data: IPostLoginResponse) => handleSuccess(data),
+        onSuccess: () => handleSuccess(),
         onError: (error: AxiosError) => handleError(error),
       });
     }
   };
 
-  const handleSuccess = (data: IPostLoginResponse) => {
-    setLocalStorage("access_token", data.access_token);
-    setLocalStorage("refresh_token", data.refresh_token);
+  const handleSuccess = () => {
     reset();
     setNotification({
       open: true,
-      message: "Login realizado com sucesso!",
+      message: "Usuário cadastrado com sucesso!",
       severity: "success",
     });
-    window.location.href = "/";
   };
 
   const handleError = (error: AxiosError) => {
     const errorMessage =
-      error.response?.status === 401
-        ? "Falha ao realizar login. Verifique suas credenciais."
-        : "Falha no sistema, tente realizar o login mais tarde";
-
+      error.response?.status === 409
+        ? "E-mail já está cadastrado"
+        : "Houve uma falha momentânea, tente novamente mais tarde.";
     setNotification({
       open: true,
       message: errorMessage,
       severity: "error",
     });
   };
-
-  const handleForgotPassword = () => {
-    window.location.href = "/";
-  };
+  4;
 
   return (
     <Box
@@ -89,6 +84,23 @@ export function SignInForm(): React.JSX.Element {
         gap: 2,
       }}
     >
+      <FormControl>
+        <FormLabel htmlFor="name">Nome</FormLabel>
+        <TextField
+          id="name"
+          name="name"
+          placeholder="Digite seu nome"
+          autoComplete="name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          error={Boolean(errors.name)}
+          helperText={errors.name}
+          fullWidth
+          required
+          variant="outlined"
+        />
+      </FormControl>
+
       <FormControl>
         <FormLabel htmlFor="email">E-mail</FormLabel>
         <TextField
@@ -124,13 +136,7 @@ export function SignInForm(): React.JSX.Element {
           variant="outlined"
         />
       </FormControl>
-      <Link
-        href="/forgot-password"
-        variant="body1"
-        sx={{ alignSelf: "flex-end" }}
-      >
-        Esqueci a senha
-      </Link>
+
       <LoadingButton
         type="submit"
         fullWidth
@@ -138,16 +144,21 @@ export function SignInForm(): React.JSX.Element {
         color="primary"
         loading={isLoading}
       >
-        Entrar
+        Cadastrar
       </LoadingButton>
 
-      <Box sx={{ mt: 4, display: "flex", flexDirection: "column", gap: 2 }}>
-        <Typography sx={{ textAlign: "center" }}>
-          Não tem cadastro?{" "}
-          <Link href="/cadastro-usuario" variant="body1">
-            Cadastre-se agora
-          </Link>
-        </Typography>
+      <Box
+        sx={{
+          mt: 4,
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+          alignSelf: "center",
+        }}
+      >
+        <Link href="/login" variant="body1">
+          voltar para o login
+        </Link>
       </Box>
       <Typography
         variant="caption"
@@ -163,7 +174,6 @@ export function SignInForm(): React.JSX.Element {
       </Typography>
       <Snackbar
         open={notification.open}
-        autoHideDuration={3000}
         onClose={() => setNotification({ ...notification, open: false })}
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       >

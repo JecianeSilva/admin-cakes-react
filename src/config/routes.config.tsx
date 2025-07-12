@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { Navigate, createBrowserRouter } from "react-router-dom";
-import { SignIn, DashBoard, Category } from "src/pages";
+import { SignIn, DashBoard, Category, Register } from "src/pages";
 import { Layout } from "src/components";
 import { CreateCategoryForm } from "../pages/Category/CategoryCreation/CategoryCreation";
 // import { Users, Products, Categories, Orders } from "src/pages";
@@ -16,7 +16,7 @@ export const PrivateRoute = ({ children }: PrivateRouteProps) => {
 
 export const publicRoutes = [
   { path: "/login", element: <SignIn /> },
-  // { path: "/register", element: <Register /> },
+  { path: "/cadastro-usuario", element: <Register /> },
   // { path: "/forgot-password", element: <ForgotPassword /> },
 ];
 
