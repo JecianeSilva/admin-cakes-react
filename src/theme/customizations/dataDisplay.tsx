@@ -22,7 +22,7 @@ export const dataDisplayCustomizations: Components<Theme> = {
         [`& .${svgIconClasses.root}`]: {
           width: "1rem",
           height: "1rem",
-          color: theme.palette.text.secondary,
+          color: theme.palette.common.white,
         },
         [`& .${typographyClasses.root}`]: {
           fontWeight: 500,
@@ -30,19 +30,16 @@ export const dataDisplayCustomizations: Components<Theme> = {
         [`& .${buttonBaseClasses.root}`]: {
           display: "flex",
           gap: 8,
-          padding: "2px 8px",
+          padding: "6px 8px",
           borderRadius: theme.shape.borderRadius,
-          opacity: 0.7,
+
           "&.Mui-selected": {
             opacity: 1,
-            backgroundColor: alpha(theme.palette.primary.main, 0.08),
+            backgroundColor: theme.palette.primary.dark,
             [`& .${svgIconClasses.root}`]: {
-              color: theme.palette.text.primary,
+              color: theme.palette.common.white,
             },
             "&:focus-visible": {
-              backgroundColor: alpha(theme.palette.primary.main, 0.08),
-            },
-            "&:hover": {
               backgroundColor: alpha(theme.palette.primary.main, 0.16),
             },
           },

@@ -3,26 +3,12 @@ import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-// import SelectContent from "./SelectContent";
-// import CardAlert from "./CardAlert";
-import MenuContent from "../MenuContent/MenuContent";
-import MenuList from "../MenuList/MenuList";
 import { Drawer } from "./SideBarStyled";
 import { ISideBarProps } from "./SiderBar.types";
 
 export default function SideBar({ user, children }: ISideBarProps) {
   return (
     <Drawer variant="permanent" sx={{ display: { xs: "none", md: "block" } }}>
-      {/* <Box
-        sx={{
-          display: "flex",
-          mt: "calc(var(--template-frame-height, 0px) + 4px)",
-          p: 1.5,
-        }}
-      >
-        <SelectContent />
-      </Box> */}
-
       <Stack
         direction="row"
         sx={{
@@ -40,7 +26,7 @@ export default function SideBar({ user, children }: ISideBarProps) {
             width: 36,
             height: 36,
             backgroundColor: "rgba(255,255,255,0.3)",
-            color: "text.primary",
+            color: "theme.palette.common.white",
           }}
         />
         <Box sx={{ mr: "auto" }}>
@@ -54,7 +40,6 @@ export default function SideBar({ user, children }: ISideBarProps) {
             {user.email}
           </Typography>
         </Box>
-        <MenuList />
       </Stack>
       <Divider />
       <Box
