@@ -17,11 +17,11 @@ import {
 import { Add, Delete, Edit, Refresh } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { useFetchCategories } from "src/queries";
+import { useFetchProducts } from "../../queries/getProducts";
 
-export function Category() {
+export function Product() {
   const navigate = useNavigate();
-  const { data = [], isLoading, refetch } = useFetchCategories();
+  const { data = [], isLoading, refetch } = useFetchProducts();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -37,22 +37,22 @@ export function Category() {
   };
 
   const handleEdit = (id: string | number) => {
-    navigate(`/categories/edit/${id}`);
+    navigate(`/produto/edit/${id}`);
   };
 
   const handleCreate = () => {
-    navigate("/categoria/cadastrar");
+    navigate("/produto/cadastrar");
   };
 
   const handleDelete = (id: string | number) => {
-    console.log("Deletar categoria ID:", id);
+    console.log("Deletar product ID:", id);
     // Adicionar mutate de exclusão aqui com confirmação
   };
 
   return (
     <Container maxWidth={"lg"}>
       <Typography variant="h5" gutterBottom>
-        Categorias
+        Produtos
       </Typography>
 
       <Box
@@ -70,7 +70,7 @@ export function Category() {
           sx={{ textTransform: "none" }}
           onClick={handleCreate}
         >
-          Criar Nova
+          Cadastrar novo Produto
         </Button>
       </Box>
 
@@ -105,7 +105,8 @@ export function Category() {
                 <TableRow>
                   <TableCell>ID</TableCell>
                   <TableCell>Nome</TableCell>
-                  <TableCell>Descrição</TableCell>
+                  <TableCell>Categoria</TableCell>
+                  <TableCell>Preço</TableCell>
                   <TableCell>Status</TableCell>
                   <TableCell align="right" />
                 </TableRow>
@@ -113,22 +114,29 @@ export function Category() {
               <TableBody>
                 {data
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((cat, index) => (
-                    <TableRow key={cat.id}>
+                  .map((productData, index) => (
+                    <TableRow key={productData.id}>
                       <TableCell>#{index + 1}</TableCell>
-                      <TableCell>{cat.name}</TableCell>
-                      <TableCell>{cat.description || "-"}</TableCell>
+                      <TableCell>{productData.name}</TableCell>
+                      <TableCell>{productData.category.name}</TableCell>
+                      <TableCell>{productData.price}</TableCell>
                       <TableCell>
-                        {cat.status === "ACTIVATED" ? "Ativo" : "Desativado"}
+                        {productData.status === "ACTIVATED"
+                          ? "Ativo"
+                          : "Desativado"}
                       </TableCell>
                       <TableCell align="right">
                         <Tooltip title="Editar">
-                          <IconButton onClick={() => handleEdit(cat.id)}>
+                          <IconButton
+                            onClick={() => handleEdit(productData.id)}
+                          >
                             <Edit fontSize="small" />
                           </IconButton>
                         </Tooltip>
                         <Tooltip title="Excluir">
-                          <IconButton onClick={() => handleDelete(cat.id)}>
+                          <IconButton
+                            onClick={() => handleDelete(productData.id)}
+                          >
                             <Delete fontSize="small" />
                           </IconButton>
                         </Tooltip>

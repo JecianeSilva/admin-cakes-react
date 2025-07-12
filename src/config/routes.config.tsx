@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { Navigate, createBrowserRouter } from "react-router-dom";
-import { SignIn, DashBoard, Category, Register } from "src/pages";
+import { SignIn, DashBoard, Category, Register, Product } from "src/pages";
 import { Layout } from "src/components";
 import { CreateCategoryForm } from "../pages/Category/CategoryCreation/CategoryCreation";
 // import { Users, Products, Categories, Orders } from "src/pages";
@@ -26,7 +26,8 @@ export const privateRoutes = [
   { path: "/categoria", element: <Category /> },
   { path: "/categoria/cadastrar", element: <CreateCategoryForm /> },
   { path: "/categoria/editar", element: <CreateCategoryForm /> },
-  // { path: "/products", element: <Products /> },
+
+  { path: "/produtos", element: <Product /> },
   // adicione mais conforme necessário
 ];
 
