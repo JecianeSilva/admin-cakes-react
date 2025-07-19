@@ -2,7 +2,8 @@ import { ReactNode } from "react";
 import { Navigate, createBrowserRouter } from "react-router-dom";
 import { SignIn, DashBoard, Category, Register, Product } from "src/pages";
 import { Layout } from "src/components";
-import { CreateCategoryForm } from "../pages/Category/CategoryCreation/CategoryCreation";
+import { CreateCategoryForm } from "../pages/Category/CategoryCreation";
+import { CreateProductForm } from "../pages/Product/ProductCreation";
 // import { Users, Products, Categories, Orders } from "src/pages";
 
 interface PrivateRouteProps {
@@ -28,7 +29,12 @@ export const privateRoutes = [
   { path: "/categoria/editar", element: <CreateCategoryForm /> },
 
   { path: "/produtos", element: <Product /> },
-  // adicione mais conforme necessário
+  { path: "/produtos/cadastrar", element: <CreateProductForm /> },
+  { path: "/produtos/editar", element: <CreateProductForm /> },
+
+  // { path: "/pedidos", element: <Order /> },
+  // { path: "/pedidos/cadastrar", element: <Order /> },
+  // { path: "/pedidos/editar", element: <Order /> },
 ];
 
 export const routes = createBrowserRouter([

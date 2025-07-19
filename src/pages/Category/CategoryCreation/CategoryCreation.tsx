@@ -15,12 +15,6 @@ import {
 import { styled } from "@mui/material/styles";
 import { authorizedApi } from "src/services";
 
-const FormGrid = styled(Grid)(() => ({
-  display: "flex",
-  flexDirection: "column",
-  gap: 4,
-}));
-
 export function CreateCategoryForm() {
   const [form, setForm] = useState({
     name: "",
@@ -96,13 +90,18 @@ export function CreateCategoryForm() {
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        noValidate
+        sx={{ marginLeft: "unset" }}
+      >
         <Typography variant="h6" gutterBottom>
           Cadastro de Categoria
         </Typography>
 
         <Grid container spacing={3} alignItems="flex-start">
-          <FormGrid>
+          <Grid size={{ xs: 12, md: 6 }}>
             <FormLabel required>Nome da Categoria</FormLabel>
             <OutlinedInput
               value={form.name}
@@ -111,9 +110,9 @@ export function CreateCategoryForm() {
               required
               size="small"
             />
-          </FormGrid>
+          </Grid>
 
-          <FormGrid>
+          <Grid size={{ xs: 12, md: 6 }}>
             <FormLabel>Imagem</FormLabel>
             <input type="file" accept="image/*" onChange={handleImageSelect} />
             {imagePreview && (
@@ -134,9 +133,9 @@ export function CreateCategoryForm() {
                 />
               </Box>
             )}
-          </FormGrid>
+          </Grid>
 
-          <FormGrid>
+          <Grid size={{ xs: 12, md: 6 }}>
             <FormLabel>Descrição (opcional)</FormLabel>
             <OutlinedInput
               multiline
@@ -146,9 +145,9 @@ export function CreateCategoryForm() {
               placeholder="Breve descrição"
               size="small"
             />
-          </FormGrid>
+          </Grid>
 
-          <FormGrid>
+          <Grid size={{ xs: 12, md: 6 }}>
             <FormLabel>Status</FormLabel>
             <Select
               size="small"
@@ -158,7 +157,7 @@ export function CreateCategoryForm() {
               <MenuItem value="ACTIVATED">Ativado</MenuItem>
               <MenuItem value="DISABLED">Desativado</MenuItem>
             </Select>
-          </FormGrid>
+          </Grid>
 
           <Grid display="flex" alignItems="flex-end">
             <Button type="submit" variant="contained" color="primary" fullWidth>
@@ -166,7 +165,7 @@ export function CreateCategoryForm() {
             </Button>
           </Grid>
         </Grid>
-      </form>
+      </Box>
 
       <Snackbar
         open={notification.open}

@@ -23,7 +23,7 @@ export function Product() {
   };
 
   const handleCreate = () => {
-    navigate("/produto/cadastrar");
+    navigate("/produtos/cadastrar");
   };
 
   const handleDelete = (id: string | number) => {
@@ -54,7 +54,7 @@ export function Product() {
           sx={{ textTransform: "none" }}
           onClick={handleCreate}
         >
-          Cadastrar novo Produto
+          Cadastrar Produto
         </Button>
       </Box>
 
@@ -66,10 +66,16 @@ export function Product() {
         <TableGeneric<IProduct>
           data={data || []}
           columns={[
-            { label: "ID", field: (_row, index) => `#${(index ?? 0) + 1}` },
             { label: "Nome", field: "name" },
-            { label: "Categoria", field: (row) => row.categoryId ?? "-" }, //@Todo ajustar retorno categoria
-            { label: "Preço", field: "price" },
+            { label: "Categoria", field: (row) => row.category.name ?? "-" },
+            {
+              label: "Preço",
+              field: (row) => "R$ " + row.price.toString().replace(".", ","),
+            },
+            {
+              label: "Sabor",
+              field: (row) => row.flavor || "-",
+            },
             {
               label: "Status",
               field: (row) =>

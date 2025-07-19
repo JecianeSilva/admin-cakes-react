@@ -68,7 +68,7 @@ authorizedApi.interceptors.response.use(
           refreshToken,
         })
 
-        const newAccessToken = data.accessToken
+        const newAccessToken = data.access_token
         setLocalStorage('access_token', newAccessToken)
 
         processQueue(null, newAccessToken)
