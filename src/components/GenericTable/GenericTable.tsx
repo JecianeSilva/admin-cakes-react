@@ -77,8 +77,9 @@ export function TableGeneric<T>({
       elevation={3}
       sx={{
         maxWidth: "100%",
-        borderRadius: 2,
-        boxShadow: "0 4px 16px rgba(0, 0, 0, 0.15)",
+        borderRadius: 1,
+        boxShadow: "0 4px 16px rgba(0, 0, 0, 0.12)",
+        backgroundColor: "theme.palette.background.paper",
       }}
     >
       <Box
@@ -141,6 +142,10 @@ export function TableGeneric<T>({
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
+        labelRowsPerPage="Linhas por página:"
+        labelDisplayedRows={({ from, to, count }) =>
+          `${from}–${to} de ${count !== -1 ? count : `mais de ${to}`}`
+        }
       />
     </Paper>
   );

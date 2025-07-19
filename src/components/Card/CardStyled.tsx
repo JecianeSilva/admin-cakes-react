@@ -10,7 +10,7 @@ export const StyledCard = styled(MuiCard)(({ theme }) => ({
   padding: theme.spacing(4, 2),
   gap: theme.spacing(1),
   border: "1px solid #fff",
-  backgroundColor: theme.palette.background.default,
+  backgroundColor: theme.palette.background.paper,
   borderRadius: theme.spacing(2),
   boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.08)",
   backdropFilter: "blur(5px)",
