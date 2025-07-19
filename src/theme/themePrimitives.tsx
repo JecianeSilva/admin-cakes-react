@@ -145,8 +145,8 @@ export const getDesignTokens = (mode: PaletteMode) => {
       grey: { ...gray },
       divider: mode === "dark" ? alpha(gray[700], 0.6) : alpha(gray[300], 0.4),
       background: {
-        default: mode === "dark" ? gray[900] : "#fefefe",
-        paper: mode === "dark" ? "#0c0f11" : gray[50],
+        default: mode === "dark" ? gray[900] : "#FFFFFF",
+        paper: mode === "dark" ? "#0c0f11" : "#FEFEFE",
       },
       text: {
         primary: mode === "dark" ? "#FDF5F2" : "#0E1418",

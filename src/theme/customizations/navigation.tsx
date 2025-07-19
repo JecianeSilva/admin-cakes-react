@@ -45,33 +45,24 @@ export const navigationCustomizations: Components<Theme> = {
     },
   },
   MuiSelect: {
-    defaultProps: {
-      IconComponent: React.forwardRef<SVGSVGElement, SvgIconProps>(
-        (props, ref) => (
-          <UnfoldMoreRoundedIcon fontSize="small" {...props} ref={ref} />
-        )
-      ),
-    },
     styleOverrides: {
       root: ({ theme }) => ({
         borderRadius: theme.shape.borderRadius,
-        border: `1px solid ${theme.palette.divider}`,
-        backgroundColor: theme.palette.background.paper,
+        backgroundColor: theme.palette.background.default,
+        border: `1px solid ${theme.palette.grey[400]}`,
+        padding: "0.75rem 1rem",
+        transition: "border-color 0.2s ease-in-out",
         "&:hover": {
-          borderColor: theme.palette.primary.dark,
+          borderColor: theme.palette.grey[600],
         },
-        [`&.${selectClasses.focused}`]: {
-          outlineOffset: 0,
+        "&.Mui-focused": {
           borderColor: theme.palette.primary.main,
         },
-        "&:before, &:after": {
-          display: "none",
+        // Ajustar para o ícone do select (seta) ficar alinhado:
+        ".MuiSelect-icon": {
+          right: 12,
         },
       }),
-      select: {
-        display: "flex",
-        alignItems: "center",
-      },
     },
   },
   MuiLink: {
