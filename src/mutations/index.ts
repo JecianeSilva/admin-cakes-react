@@ -1,2 +1,6 @@
 export * from './useFetchPostLogin'
 export * from './useFetchPostRegister'
+export * from './useFetchPostProduct'
+// export * from './useFetchPutProduct'
+// export * from './useFetchPostCategory'
+// export * from './useFetchPutCategory'
