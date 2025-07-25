@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Box,
   IconButton,
@@ -18,29 +18,18 @@ import { ITableGenericProps } from "./GenericTable.types";
 
 export function TableGeneric<T>({
   data,
-  initialPage = 0,
-  initialRowsPerPage = 10,
   columns,
   isLoading,
   isError,
   onEdit,
   onDelete,
   getId,
+  total,
+  page,
+  rowsPerPage,
+  onPageChange,
+  onRowsPerPageChange,
 }: ITableGenericProps<T>) {
-  const [page, setPage] = useState(initialPage);
-  const [rowsPerPage, setRowsPerPage] = useState(initialRowsPerPage);
-
-  const handleChangePage = (_: unknown, newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
   if (isLoading) {
     return (
       <Box display="flex" justifyContent="center" py={4}>
@@ -67,11 +56,6 @@ export function TableGeneric<T>({
     );
   }
 
-  const paginatedData = data.slice(
-    page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage
-  );
-
   return (
     <Paper
       elevation={3}
@@ -79,11 +63,9 @@ export function TableGeneric<T>({
         maxWidth: "100%",
         borderRadius: 1,
         boxShadow: "0 4px 16px rgba(0, 0, 0, 0.12)",
-        backgroundColor: "theme.palette.background.paper",
       }}
     >
       <Box
-        minWidth={"md"}
         sx={{
           overflowX: "auto",
           width: "100%",
@@ -101,13 +83,13 @@ export function TableGeneric<T>({
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedData.map((row, index) => (
+            {data.map((row, index) => (
               <TableRow key={getId(row)}>
                 {columns.map((col, colIndex) => (
                   <TableCell key={colIndex} align={col.align ?? "left"}>
                     {typeof col.field === "function"
-                      ? col.field(row, index + page * rowsPerPage)
-                      : (row[col.field] as React.ReactNode)}
+                      ? col.field(row, index)
+                      : (row[col.field as keyof T] as React.ReactNode)}
                   </TableCell>
                 ))}
                 {(onEdit || onDelete) && (
@@ -135,13 +117,13 @@ export function TableGeneric<T>({
       </Box>
 
       <TablePagination
-        rowsPerPageOptions={[5, 10]}
+        rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={data.length}
+        count={total}
         rowsPerPage={rowsPerPage}
         page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
+        onPageChange={onPageChange}
+        onRowsPerPageChange={onRowsPerPageChange}
         labelRowsPerPage="Linhas por página:"
         labelDisplayedRows={({ from, to, count }) =>
           `${from}–${to} de ${count !== -1 ? count : `mais de ${to}`}`
