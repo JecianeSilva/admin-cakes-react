@@ -15,12 +15,16 @@ import { useState } from "react";
 
 export function Category() {
   const navigate = useNavigate();
-  const { data = [], isLoading, isError, refetch } = useFetchCategories();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  const { data, isLoading, isError, refetch } = useFetchCategories({
+    page: page + 1,
+    limit: rowsPerPage,
+  });
+
   const handleEdit = (id: string | number) => {
-    navigate(`/categories/edit/${id}`);
+    navigate(`/categoria/editar/${id}`);
   };
 
   const handleCreate = () => {
@@ -31,8 +35,19 @@ export function Category() {
     console.log("Deletar categoria ID:", id);
   };
 
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth={false} sx={{ marginLeft: "unset", maxWidth: "100%" }}>
       <Typography variant="h5" gutterBottom>
         Categorias
       </Typography>
@@ -62,7 +77,8 @@ export function Category() {
         </Box>
       ) : (
         <TableGeneric<ICategory>
-          data={data}
+          data={data?.data || []}
+          total={data?.total || 0}
           columns={[
             { label: "Nome", field: "name" },
             { label: "Descrição", field: (row) => row.description || "-" },
@@ -77,8 +93,10 @@ export function Category() {
           getId={(row) => row.id}
           onEdit={handleEdit}
           onDelete={handleDelete}
-          initialPage={page}
-          initialRowsPerPage={rowsPerPage}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
         />
       )}
     </Container>

@@ -3,6 +3,7 @@ import { Navigate, createBrowserRouter } from "react-router-dom";
 import { SignIn, DashBoard, Category, Register, Product } from "src/pages";
 import { Layout } from "src/components";
 import { CreateCategoryForm } from "../pages/Category/CategoryCreation";
+import { EditionCategoryForm } from "../pages/Category/CategoryEdition";
 import { CreateProductForm } from "../pages/Product/ProductCreation";
 // import { Users, Products, Categories, Orders } from "src/pages";
 
@@ -26,7 +27,7 @@ export const privateRoutes = [
   // { path: "/users", element: <Users /> },
   { path: "/categoria", element: <Category /> },
   { path: "/categoria/cadastrar", element: <CreateCategoryForm /> },
-  { path: "/categoria/editar", element: <CreateCategoryForm /> },
+  { path: "/categoria/editar/:id", element: <EditionCategoryForm /> },
 
   { path: "/produtos", element: <Product /> },
   { path: "/produtos/cadastrar", element: <CreateProductForm /> },

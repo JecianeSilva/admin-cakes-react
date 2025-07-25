@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   FormLabel,
@@ -9,13 +9,16 @@ import {
   SelectChangeEvent,
   Container,
   Card,
+  CircularProgress,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { useFetchPostCategory } from "../../../mutations/useFetchPostCategory";
 import { InputSelect, InputText } from "../../../components";
 import { LoadingButton } from "@mui/lab";
 import { useValidationCategoryForm } from "./hook";
+import { useNavigate, useParams } from "react-router-dom";
+import { useFetchCategoryById } from "../../../queries";
 import { useCategoryFormStore } from "../../../store";
+import { useFetchPutCategory } from "../../../mutations";
 
 const ItemGrid = styled(Grid)({
   display: "flex",
@@ -23,11 +26,19 @@ const ItemGrid = styled(Grid)({
   gap: 4,
 });
 
-export function CreateCategoryForm() {
-  const { name, description, imageUrl, status, setField, reset } =
+export function EditionCategoryForm() {
+  const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
+  const { data: initialData, isLoading: isLoadingData } = useFetchCategoryById(
+    id!
+  );
+
+  const { name, description, status, setField, reset, setAllFields } =
     useCategoryFormStore();
   const { validate, errors } = useValidationCategoryForm();
-  const { mutate, isLoading } = useFetchPostCategory();
+  const { mutate: updateCategory, isLoading: isLoading } =
+    useFetchPutCategory();
+
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [notification, setNotification] = useState({
@@ -35,6 +46,20 @@ export function CreateCategoryForm() {
     message: "",
     severity: "success" as "success" | "error",
   });
+
+  useEffect(() => {
+    if (initialData) {
+      setAllFields({
+        name: initialData.name,
+        description: initialData.description || "",
+        status: initialData.status,
+        imageUrl: initialData.image || undefined,
+      });
+      const fullImageUrl = `${initialData.image}`;
+      setImagePreview(fullImageUrl);
+    }
+    return () => reset();
+  }, [initialData, setAllFields, reset]);
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
@@ -44,13 +69,12 @@ export function CreateCategoryForm() {
       reader.onloadend = () => setImagePreview(reader.result as string);
       reader.readAsDataURL(file);
     } else {
-      setImagePreview(null);
+      setImagePreview(initialData?.image || null);
     }
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
     if (!validate({ name, status })) {
       setNotification({
         open: true,
@@ -59,42 +83,48 @@ export function CreateCategoryForm() {
       });
       return;
     }
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("description", description || "");
-    formData.append("status", status);
-    if (imageFile) {
-      formData.append("image", imageFile);
-    }
 
-    mutate(formData, {
-      onSuccess: () => {
-        reset();
-        setImageFile(null);
-        setImagePreview(null);
-        setNotification({
-          open: true,
-          message: "Categoria cadastrado com sucesso!",
-          severity: "success",
-        });
-      },
-      onError: (error) => {
-        console.error("Erro ao cadastrar categoria:", error);
-        setNotification({
-          open: true,
-          message:
-            (error.response?.data as any)?.message ||
-            "Erro ao cadastrar produto",
-          severity: "error",
-        });
-      },
-    });
+    const categoryUpdateData = {
+      name,
+      description: description || undefined,
+    };
+
+    // updateCategory(
+    //   { id: id!, variables: { data: categoryUpdateData, image: imageFile } },
+    //   {
+    //     onSuccess: () => {
+    //       setNotification({
+    //         open: true,
+    //         message: "Categoria atualizada com sucesso!",
+    //         severity: "success",
+    //       });
+    //       navigate("/categories");
+    //     },
+    //     onError: (error: any) => {
+    //       const errorMessage =
+    //         error.response?.data?.message || "Erro ao atualizar categoria";
+    //       setNotification({
+    //         open: true,
+    //         message: errorMessage,
+    //         severity: "error",
+    //       });
+    //     },
+    //   }
+    // );
   };
+
+  if (isLoadingData) {
+    return (
+      <Box display="flex" justifyContent="center" py={5}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Container maxWidth={false} sx={{ marginLeft: "unset", maxWidth: "100%" }}>
       <Typography variant="h5" gutterBottom>
-        Cadastro de categoria
+        Editar Categoria
       </Typography>
       <Box
         component="form"
@@ -187,7 +217,7 @@ export function CreateCategoryForm() {
                 color="primary"
                 loading={isLoading}
               >
-                Cadastrar categoria
+                Salvar
               </LoadingButton>
             </Grid>
           </Grid>
