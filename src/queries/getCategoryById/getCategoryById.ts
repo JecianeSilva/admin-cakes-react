@@ -1,17 +1,17 @@
 
 import { authorizedApi } from 'src/services'
-import { IProduct } from 'cakes-lib-types-js'
+import { ICategory } from 'cakes-lib-types-js'
 import { useQuery } from '@tanstack/react-query'
 
-export async function getProductById(id: string): Promise<IProduct> {
-  const { data } = await authorizedApi.get(`/cakes-bff/product/${id}`)
-  return data
+export async function getCategoryById(id: string): Promise<ICategory> {
+  const { data } = await authorizedApi.get(`/cakes-bff/category/${id}`);
+  return data;
 }
 
-export function useFetchProductById(id: string) {
-  return useQuery<IProduct, Error>({
+export function useFetchCategoryById(id: string) {
+  return useQuery<ICategory, Error>({
     queryKey: ['category', id],
-    queryFn: () => getProductById(id),
+    queryFn: () => getCategoryById(id),
     enabled: !!id,
   })
 }
