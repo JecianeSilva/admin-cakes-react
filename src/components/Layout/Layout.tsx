@@ -5,6 +5,7 @@ import SideBar from "./Components/SiderBar/SiderBar";
 import MenuContent from "./Components/MenuContent/MenuContent";
 import { AnimatePresence } from "framer-motion";
 import { AnimatedPage } from "./Components/AnimatedPage/AnimatedPage";
+import { NavbarBreadcrumbs } from "../Breadcrumbs";
 
 export const Layout = () => {
   return (
@@ -22,8 +23,8 @@ export const Layout = () => {
       <Box flexGrow={1}>
         <AnimatePresence mode="wait">
           <AnimatedPage key={location.pathname}>
-            {/* <Topbar /> */}
             <Box p={2}>
+              <NavbarBreadcrumbs />
               <Outlet />
             </Box>
           </AnimatedPage>
