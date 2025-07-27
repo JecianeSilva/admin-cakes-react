@@ -8,6 +8,8 @@ import {
   SelectChangeEvent,
   Grid,
   CircularProgress,
+  Container,
+  Card,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useProductFormStore } from "./store";
@@ -80,209 +82,230 @@ export function CreateProductForm() {
       return;
     }
 
-    const productData: TPostSaveProductRequestBody = {
-      categoryId,
-      name,
-      price: parseFloat(price.replace(",", ".")),
-      description,
-      dough,
-      filling,
-      flavor,
-      size,
-      status,
-    };
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("description", description || "");
+    formData.append("status", status);
+    formData.append("categoryId", categoryId);
+    formData.append("dough", dough);
+    formData.append("filling", filling);
+    formData.append("flavor", flavor);
+    formData.append("size", size);
+    formData.append("price", price.replace(",", "."));
 
-    // mutate(
-    //   { productData, image: imageFile },
-    //   {
-    //     onSuccess: () => {
-    //       reset();
-    //       setImageFile(null);
-    //       setImagePreview(null);
-    //       setNotification({
-    //         open: true,
-    //         message: "Produto cadastrado com sucesso!",
-    //         severity: "success",
-    //       });
-    //     },
-    //     onError: (error: any) => {
-    //       const errorMessage =
-    //         error.response?.data?.message || "Erro ao cadastrar produto";
-    //       setNotification({
-    //         open: true,
-    //         message: errorMessage,
-    //         severity: "error",
-    //       });
-    //     },
-    //   }
-    // );
+    if (imageFile) {
+      formData.append("image", imageFile);
+    }
+    // mutate(formData, {
+    //   onSuccess: () => {
+    reset();
+    setImageFile(null);
+    setImagePreview(null);
+    setNotification({
+      open: true,
+      message: "Produto cadastrado com sucesso!",
+      severity: "success",
+    });
+
+    window.location.href = "/produtos";
+    //   },
+    //   onError: (error: any) => {
+    //     const errorMessage =
+    //       error.response?.data?.message || "Erro ao cadastrar produto";
+    //     setNotification({
+    //       open: true,
+    //       message: errorMessage,
+    //       severity: "error",
+    //     });
+    //   },
+    // });
   };
 
   const isLoading = isCategoriesLoading || isProductPending;
 
   return (
-    <>
+    <Container maxWidth={false} sx={{ marginLeft: "unset", maxWidth: "100%" }}>
+      <Typography variant="h6" gutterBottom marginBottom={2}>
+        Cadastro de Produto
+      </Typography>
       <Box
         component="form"
         onSubmit={handleSubmit}
         noValidate
-        sx={{ padding: "24px 16px" }}
+        mt={2}
+        sx={{ marginLeft: "unset" }}
       >
-        <Typography variant="h6" gutterBottom marginBottom={2}>
-          Cadastro de Produto
-        </Typography>
-        <Grid container spacing={3} alignItems="flex-start">
-          <ItemGrid sx={{ xs: 12, md: 6, lg: 4 }}>
-            <InputText
-              id="name"
-              label="Nome do Produto"
-              value={name}
-              onChange={(e) => setField("name", e.target.value)}
-              required
-              error={!!errors.name}
-              helperText={errors.name}
-            />
-          </ItemGrid>
-
-          <ItemGrid sx={{ xs: 12, md: 6, lg: 4 }}>
-            <InputPrice
-              id="price"
-              label="Preço do Produto"
-              value={price}
-              onChange={(e) => setField("price", e.target.value)}
-              required
-              error={!!errors.price}
-              helperText={errors.price}
-            />
-          </ItemGrid>
-
-          <ItemGrid sx={{ xs: 12, md: 6, lg: 4 }}>
-            {isCategoriesLoading ? (
-              <Box display="flex" alignItems="center" gap={1}>
-                <CircularProgress size={20} />
-                <FormLabel>Carregando categorias...</FormLabel>
-              </Box>
-            ) : isCategoriesError ? (
-              <FormLabel error>Erro ao carregar categorias.</FormLabel>
-            ) : (
-              <InputSelect
-                id="categoryId"
-                label="Categoria"
-                value={categoryId}
-                onChange={(e: SelectChangeEvent<string>) =>
-                  setField("categoryId", e.target.value)
-                }
-                options={
-                  categoriesData?.data?.map((cat) => ({
-                    value: cat.id,
-                    label: cat.name,
-                  })) || []
-                }
+        <Card sx={{ backgroundColor: "white" }}>
+          <Grid container spacing={3} alignItems="flex-start">
+            <ItemGrid size={{ xs: 12, md: 6, lg: 4 }}>
+              <InputText
+                id="name"
+                label="Nome do Produto"
+                value={name}
+                onChange={(e) => setField("name", e.target.value)}
                 required
-                error={!!errors.categoryId}
-                helperText={errors.categoryId}
-                disabled={
-                  !categoriesData?.data || categoriesData.data.length === 0
-                }
+                error={!!errors.name}
+                helperText={errors.name}
               />
-            )}
-          </ItemGrid>
+            </ItemGrid>
 
-          <ItemGrid sx={{ xs: 12, md: 6, lg: 4 }}>
-            <InputText
-              id="flavor"
-              label="Sabor"
-              value={flavor}
-              onChange={(e) => setField("flavor", e.target.value)}
-            />
-          </ItemGrid>
+            <ItemGrid size={{ xs: 12, md: 6, lg: 4 }}>
+              <InputPrice
+                id="price"
+                label="Preço do Produto"
+                value={price}
+                onChange={(e) => setField("price", e.target.value)}
+                required
+                error={!!errors.price}
+                helperText={errors.price}
+              />
+            </ItemGrid>
 
-          <ItemGrid sx={{ xs: 12, md: 6, lg: 4 }}>
-            <InputText
-              id="size"
-              label="Tamanho"
-              value={size}
-              onChange={(e) => setField("size", e.target.value)}
-            />
-          </ItemGrid>
-
-          <ItemGrid sx={{ xs: 12, md: 6, lg: 4 }}>
-            <InputText
-              id="filling"
-              label="Recheio"
-              value={filling}
-              onChange={(e) => setField("filling", e.target.value)}
-            />
-          </ItemGrid>
-
-          <ItemGrid sx={{ xs: 12, md: 6, lg: 4 }}>
-            <InputText
-              id="dough"
-              label="Massa"
-              value={dough}
-              onChange={(e) => setField("dough", e.target.value)}
-            />
-          </ItemGrid>
-
-          <ItemGrid sx={{ xs: 12, md: 6, lg: 4 }}>
-            <InputText
-              id="description"
-              label="Descrição"
-              value={description || ""}
-              onChange={(e) => setField("description", e.target.value)}
-              multiline
-              rows={3}
-            />
-          </ItemGrid>
-
-          <ItemGrid sx={{ xs: 12, md: 6, lg: 4 }}>
-            <FormLabel htmlFor="image">Imagem (Opcional)</FormLabel>
-            <input type="file" accept="image/*" onChange={handleImageSelect} />
-            {imagePreview && (
-              <Box
-                mt={1}
-                sx={{ width: 120, height: 80, border: "1px solid #ccc" }}
-              >
-                <img
-                  src={imagePreview}
-                  alt="Preview"
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                  }}
+            <ItemGrid size={{ xs: 12, md: 6, lg: 4 }}>
+              {isCategoriesLoading ? (
+                <Box display="flex" alignItems="center" gap={1}>
+                  <CircularProgress size={20} />
+                  <FormLabel>Carregando categorias...</FormLabel>
+                </Box>
+              ) : isCategoriesError ? (
+                <FormLabel error>Erro ao carregar categorias.</FormLabel>
+              ) : (
+                <InputSelect
+                  id="categoryId"
+                  label="Categoria"
+                  value={categoryId}
+                  onChange={(e: SelectChangeEvent<string>) =>
+                    setField("categoryId", e.target.value)
+                  }
+                  options={
+                    categoriesData?.data?.map((cat) => ({
+                      value: cat.id,
+                      label: cat.name,
+                    })) || []
+                  }
+                  required
+                  error={!!errors.categoryId}
+                  helperText={errors.categoryId}
+                  disabled={
+                    !categoriesData?.data || categoriesData.data.length === 0
+                  }
                 />
-              </Box>
-            )}
-          </ItemGrid>
+              )}
+            </ItemGrid>
 
-          <Grid>
-            <LoadingButton
-              type="submit"
-              variant="contained"
-              color="primary"
-              loading={isLoading}
-            >
-              Cadastrar Produto
-            </LoadingButton>
+            <ItemGrid size={{ xs: 12, md: 6, lg: 3 }}>
+              <InputText
+                id="flavor"
+                label="Sabor"
+                value={flavor}
+                onChange={(e) => setField("flavor", e.target.value)}
+              />
+            </ItemGrid>
+
+            <ItemGrid size={{ xs: 12, md: 6, lg: 3 }}>
+              <InputText
+                id="size"
+                label="Tamanho"
+                value={size}
+                onChange={(e) => setField("size", e.target.value)}
+              />
+            </ItemGrid>
+
+            <ItemGrid size={{ xs: 12, md: 6, lg: 3 }}>
+              <InputText
+                id="filling"
+                label="Recheio"
+                value={filling}
+                onChange={(e) => setField("filling", e.target.value)}
+              />
+            </ItemGrid>
+
+            <ItemGrid size={{ xs: 12, md: 6, lg: 3 }}>
+              <InputText
+                id="dough"
+                label="Massa"
+                value={dough}
+                onChange={(e) => setField("dough", e.target.value)}
+              />
+            </ItemGrid>
+
+            <ItemGrid size={{ xs: 12, md: 6, lg: 12 }}>
+              <InputText
+                id="description"
+                label="Descrição"
+                value={description || ""}
+                onChange={(e) => setField("description", e.target.value)}
+                multiline
+                rows={3}
+              />
+            </ItemGrid>
+
+            <ItemGrid size={{ xs: 12, md: 6 }}>
+              <FormLabel htmlFor="image">Imagem</FormLabel>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageSelect}
+              />
+              {imagePreview && (
+                <Box
+                  mt={1}
+                  sx={{
+                    width: 150,
+                    height: 150,
+                    borderRadius: "4px",
+                    border: "2px solid #ccc",
+                  }}
+                >
+                  <img
+                    src={imagePreview}
+                    alt="Preview"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                    }}
+                  />
+                </Box>
+              )}
+            </ItemGrid>
+
+            <Grid size={{ xs: 12 }} display="flex" alignItems="flex-end">
+              <LoadingButton
+                type="submit"
+                variant="contained"
+                color="primary"
+                loading={isLoading}
+              >
+                Cadastrar produto
+              </LoadingButton>
+            </Grid>
           </Grid>
-        </Grid>
+        </Card>
       </Box>
 
       <Snackbar
         open={notification.open}
-        autoHideDuration={6000}
+        autoHideDuration={5000}
         onClose={() => setNotification({ ...notification, open: false })}
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       >
         <Alert
           onClose={() => setNotification({ ...notification, open: false })}
           severity={notification.severity}
-          sx={{ width: "100%" }}
+          sx={{
+            width: "100%",
+            minWidth: 360,
+            backgroundColor:
+              notification.severity === "error" ? "#E02041" : "#f25822",
+            color: "#fff",
+            fontWeight: 500,
+            borderRadius: 2,
+          }}
         >
           {notification.message}
         </Alert>
       </Snackbar>
-    </>
+    </Container>
   );
 }

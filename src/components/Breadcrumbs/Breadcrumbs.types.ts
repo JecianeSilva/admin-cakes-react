@@ -1,9 +1,8 @@
 export const pathMap: { [key: string]: string } = {
-  categoria: "Categorias",
+  categorias: "Categorias",
   produtos: "Produtos",
-  users: "Usuários",
-  clients: "Clientes",
-  orders: "Pedidos",
+  clientes: "Clientes",
+  pedidos: "Pedidos",
   cadastrar: "Cadastrar",
   editar: "Editar",
 };

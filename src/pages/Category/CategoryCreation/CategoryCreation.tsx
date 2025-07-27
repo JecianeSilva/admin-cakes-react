@@ -29,7 +29,9 @@ export function CreateCategoryForm() {
   const { validate, errors } = useValidationCategoryForm();
   const { mutate, isLoading } = useFetchPostCategory();
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(
+    image || null
+  );
   const [notification, setNotification] = useState({
     open: false,
     message: "",
@@ -77,6 +79,8 @@ export function CreateCategoryForm() {
           message: "Categoria cadastrado com sucesso!",
           severity: "success",
         });
+
+        window.location.href = "/categorias";
       },
       onError: (error) => {
         console.error("Erro ao cadastrar categoria:", error);
@@ -84,7 +88,7 @@ export function CreateCategoryForm() {
           open: true,
           message:
             (error.response?.data as any)?.message ||
-            "Erro ao cadastrar produto",
+            "Erro ao cadastrar categoria",
           severity: "error",
         });
       },

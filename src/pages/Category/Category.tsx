@@ -24,11 +24,11 @@ export function Category() {
   });
 
   const handleEdit = (id: string | number) => {
-    navigate(`/categoria/editar/${id}`);
+    navigate(`/categorias/editar/${id}`);
   };
 
   const handleCreate = () => {
-    navigate("/categoria/cadastrar");
+    navigate("/categorias/cadastrar");
   };
 
   const handleDelete = (id: string | number) => {

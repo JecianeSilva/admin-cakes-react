@@ -53,9 +53,9 @@ export function EditionCategoryForm() {
         name: initialData.name,
         description: initialData.description || "",
         status: initialData.status,
-        image: initialData.image || undefined,
+        image: initialData.imageUrl || undefined,
       });
-      const fullImageUrl = `${initialData.image}`;
+      const fullImageUrl = `${initialData.imageUrl}`;
       setImagePreview(fullImageUrl);
     }
     return () => reset();
@@ -69,7 +69,7 @@ export function EditionCategoryForm() {
       reader.onloadend = () => setImagePreview(reader.result as string);
       reader.readAsDataURL(file);
     } else {
-      setImagePreview(initialData?.image || null);
+      setImagePreview(initialData?.imageUrl || null);
     }
   };
 

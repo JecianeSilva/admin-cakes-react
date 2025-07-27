@@ -24,16 +24,16 @@ export const publicRoutes = [
 
 export const privateRoutes = [
   { path: "/", element: <DashBoard /> },
-  // { path: "/users", element: <Users /> },
-  { path: "/categoria", element: <Category /> },
-  { path: "/categoria/cadastrar", element: <CreateCategoryForm /> },
-  { path: "/categoria/editar/:id", element: <EditionCategoryForm /> },
+  { path: "/clientes", element: <Category /> },
+  { path: "/categorias", element: <Category /> },
+  { path: "/categorias/cadastrar", element: <CreateCategoryForm /> },
+  { path: "/categorias/editar/:id", element: <EditionCategoryForm /> },
 
   { path: "/produtos", element: <Product /> },
   { path: "/produtos/cadastrar", element: <CreateProductForm /> },
   { path: "/produtos/editar", element: <CreateProductForm /> },
 
-  // { path: "/pedidos", element: <Order /> },
+  { path: "/pedidos", element: <Product /> },
   // { path: "/pedidos/cadastrar", element: <Order /> },
   // { path: "/pedidos/editar", element: <Order /> },
 ];

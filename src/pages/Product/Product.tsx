@@ -11,15 +11,20 @@ import { useNavigate } from "react-router-dom";
 import { useFetchProducts } from "../../queries/getProducts";
 import { TableGeneric } from "../../components";
 import { IProduct } from "cakes-lib-types-js";
+import { useState } from "react";
 
 export function Product() {
   const navigate = useNavigate();
-  const { data, isLoading, isError, refetch } = useFetchProducts();
-  const page = 0;
-  const rowsPerPage = 5;
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const { data, isLoading, isError, refetch } = useFetchProducts({
+    page: page + 1,
+    limit: rowsPerPage,
+  });
 
   const handleEdit = (id: string | number) => {
-    navigate(`/produto/edit/${id}`);
+    navigate(`/produto/editar/${id}`);
   };
 
   const handleCreate = () => {
@@ -30,11 +35,22 @@ export function Product() {
     console.log("Deletar product ID:", id);
   };
 
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
   if (isError) {
     return <>ERROR</>;
   }
   return (
-    <Container maxWidth={"lg"}>
+    <Container maxWidth={false} sx={{ marginLeft: "unset", maxWidth: "100%" }}>
       <Typography variant="h5" gutterBottom>
         Produtos
       </Typography>
@@ -64,7 +80,8 @@ export function Product() {
         </Box>
       ) : (
         <TableGeneric<IProduct>
-          data={data || []}
+          data={data?.data || []}
+          total={data?.total || []}
           columns={[
             { label: "Nome", field: "name" },
             { label: "Categoria", field: (row) => row.category.name ?? "-" },
@@ -87,8 +104,10 @@ export function Product() {
           getId={(row) => row.id}
           onEdit={handleEdit}
           onDelete={handleDelete}
-          initialPage={page}
-          initialRowsPerPage={rowsPerPage}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
         />
       )}
     </Container>
