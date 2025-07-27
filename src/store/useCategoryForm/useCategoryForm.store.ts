@@ -5,7 +5,7 @@ import { ICategoryForm } from './useCategoryForm.types'
 const defaultValues: Omit<ICategoryForm, 'setField' | 'reset'> = {
   name: '',
   description: '',
-  imageUrl: '',
+  image: '',
   status: 'ACTIVATED',
 };
 export const useCategoryFormStore = create<ICategoryForm>((set) => ({

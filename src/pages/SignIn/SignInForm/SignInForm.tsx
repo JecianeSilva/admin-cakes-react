@@ -141,14 +141,14 @@ export function SignInForm(): React.JSX.Element {
         Entrar
       </LoadingButton>
 
-      <Box sx={{ mt: 4, display: "flex", flexDirection: "column", gap: 2 }}>
+      {/* <Box sx={{ mt: 4, display: "flex", flexDirection: "column", gap: 2 }}>
         <Typography sx={{ textAlign: "center" }}>
           Não tem cadastro?{" "}
           <Link href="/cadastro-usuario" variant="body1">
             Cadastre-se agora
           </Link>
         </Typography>
-      </Box>
+      </Box> */}
       <Typography
         variant="caption"
         sx={{

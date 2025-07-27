@@ -1,28 +1,20 @@
 import React, { useState } from "react";
 import {
   Box,
-  Button,
   FormLabel,
-  OutlinedInput,
   Typography,
   Snackbar,
   Alert,
-  MenuItem,
-  Select,
   SelectChangeEvent,
-  FormControl,
-  TextField,
+  Grid,
   CircularProgress,
 } from "@mui/material";
-import Grid from "@mui/material/Grid";
 import { styled } from "@mui/material/styles";
 import { useProductFormStore } from "./store";
 import { useValidationProductForm } from "./hook/useValidationProductForm";
 import { LoadingButton } from "@mui/lab";
-import { InputText } from "../../../components";
+import { InputText, InputSelect, InputPrice } from "../../../components";
 import { useFetchCategories } from "../../../queries";
-import { InputSelect } from "../../../components/InputSelect/InputSelect";
-import { InputPrice } from "../../../components/InputPrice";
 import { useFetchPostProduct } from "../../../mutations";
 import { TPostSaveProductRequestBody } from "cakes-lib-types-js";
 
@@ -38,7 +30,6 @@ export function CreateProductForm() {
     price,
     description,
     categoryId,
-    imageUrl,
     size,
     filling,
     dough,
@@ -48,14 +39,14 @@ export function CreateProductForm() {
     reset,
   } = useProductFormStore();
   const { validate, errors } = useValidationProductForm();
+
   const {
-    data: categories = [],
+    data: categoriesData,
     isLoading: isCategoriesLoading,
     isError: isCategoriesError,
-    refetch,
-  } = useFetchCategories();
+  } = useFetchCategories({});
 
-  const { mutate, isLoading: isProductLoading } = useFetchPostProduct();
+  const { mutate, isLoading: isProductPending } = useFetchPostProduct();
 
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -77,9 +68,8 @@ export function CreateProductForm() {
     }
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
     const dataToValidate = { name, price, categoryId, status };
     if (!validate(dataToValidate)) {
       setNotification({
@@ -90,7 +80,7 @@ export function CreateProductForm() {
       return;
     }
 
-    const body: TPostSaveProductRequestBody = {
+    const productData: TPostSaveProductRequestBody = {
       categoryId,
       name,
       price: parseFloat(price.replace(",", ".")),
@@ -98,39 +88,37 @@ export function CreateProductForm() {
       dough,
       filling,
       flavor,
-      // image_url,
       size,
       status,
     };
-    // if (imageFile) {
-    //   formData.append("image", imageFile);
-    // }
 
-    mutate(body, {
-      onSuccess: () => {
-        reset();
-        setImageFile(null);
-        setImagePreview(null);
-        setNotification({
-          open: true,
-          message: "Produto cadastrado com sucesso!",
-          severity: "success",
-        });
-      },
-      onError: (error) => {
-        console.error("Erro ao cadastrar produto:", error);
-        setNotification({
-          open: true,
-          message:
-            (error.response?.data as any)?.message ||
-            "Erro ao cadastrar produto",
-          severity: "error",
-        });
-      },
-    });
+    // mutate(
+    //   { productData, image: imageFile },
+    //   {
+    //     onSuccess: () => {
+    //       reset();
+    //       setImageFile(null);
+    //       setImagePreview(null);
+    //       setNotification({
+    //         open: true,
+    //         message: "Produto cadastrado com sucesso!",
+    //         severity: "success",
+    //       });
+    //     },
+    //     onError: (error: any) => {
+    //       const errorMessage =
+    //         error.response?.data?.message || "Erro ao cadastrar produto";
+    //       setNotification({
+    //         open: true,
+    //         message: errorMessage,
+    //         severity: "error",
+    //       });
+    //     },
+    //   }
+    // );
   };
 
-  const isLoading = isCategoriesLoading || isProductLoading;
+  const isLoading = isCategoriesLoading || isProductPending;
 
   return (
     <>
@@ -138,48 +126,44 @@ export function CreateProductForm() {
         component="form"
         onSubmit={handleSubmit}
         noValidate
-        sx={{ marginLeft: "unset", padding: "24px 16px" }}
+        sx={{ padding: "24px 16px" }}
       >
         <Typography variant="h6" gutterBottom marginBottom={2}>
           Cadastro de Produto
         </Typography>
         <Grid container spacing={3} alignItems="flex-start">
-          <ItemGrid size={{ xs: 12, md: 6, lg: 4 }}>
+          <ItemGrid sx={{ xs: 12, md: 6, lg: 4 }}>
             <InputText
               id="name"
               label="Nome do Produto"
               value={name}
               onChange={(e) => setField("name", e.target.value)}
-              placeholder="Digite o nome"
               required
               error={!!errors.name}
               helperText={errors.name}
             />
           </ItemGrid>
 
-          <ItemGrid size={{ xs: 12, md: 6, lg: 4 }}>
+          <ItemGrid sx={{ xs: 12, md: 6, lg: 4 }}>
             <InputPrice
               id="price"
               label="Preço do Produto"
               value={price}
               onChange={(e) => setField("price", e.target.value)}
-              placeholder="R$ 0,00"
               required
               error={!!errors.price}
               helperText={errors.price}
             />
           </ItemGrid>
 
-          <ItemGrid size={{ xs: 12, md: 6, lg: 4 }}>
+          <ItemGrid sx={{ xs: 12, md: 6, lg: 4 }}>
             {isCategoriesLoading ? (
               <Box display="flex" alignItems="center" gap={1}>
                 <CircularProgress size={20} />
                 <FormLabel>Carregando categorias...</FormLabel>
               </Box>
             ) : isCategoriesError ? (
-              <FormLabel error>
-                Erro ao carregar categorias. Tente novamente.
-              </FormLabel>
+              <FormLabel error>Erro ao carregar categorias.</FormLabel>
             ) : (
               <InputSelect
                 id="categoryId"
@@ -188,19 +172,23 @@ export function CreateProductForm() {
                 onChange={(e: SelectChangeEvent<string>) =>
                   setField("categoryId", e.target.value)
                 }
-                options={categories.map((cat) => ({
-                  value: cat.id,
-                  label: cat.name,
-                }))}
+                options={
+                  categoriesData?.data?.map((cat) => ({
+                    value: cat.id,
+                    label: cat.name,
+                  })) || []
+                }
                 required
                 error={!!errors.categoryId}
                 helperText={errors.categoryId}
-                disabled={!categories || categories.length === 0}
+                disabled={
+                  !categoriesData?.data || categoriesData.data.length === 0
+                }
               />
             )}
           </ItemGrid>
 
-          <ItemGrid size={{ xs: 12, md: 6, lg: 3 }}>
+          <ItemGrid sx={{ xs: 12, md: 6, lg: 4 }}>
             <InputText
               id="flavor"
               label="Sabor"
@@ -209,7 +197,7 @@ export function CreateProductForm() {
             />
           </ItemGrid>
 
-          <ItemGrid size={{ xs: 12, md: 6, lg: 3 }}>
+          <ItemGrid sx={{ xs: 12, md: 6, lg: 4 }}>
             <InputText
               id="size"
               label="Tamanho"
@@ -218,7 +206,7 @@ export function CreateProductForm() {
             />
           </ItemGrid>
 
-          <ItemGrid size={{ xs: 12, md: 6, lg: 3 }}>
+          <ItemGrid sx={{ xs: 12, md: 6, lg: 4 }}>
             <InputText
               id="filling"
               label="Recheio"
@@ -227,7 +215,7 @@ export function CreateProductForm() {
             />
           </ItemGrid>
 
-          <ItemGrid size={{ xs: 12, md: 6, lg: 3 }}>
+          <ItemGrid sx={{ xs: 12, md: 6, lg: 4 }}>
             <InputText
               id="dough"
               label="Massa"
@@ -236,19 +224,19 @@ export function CreateProductForm() {
             />
           </ItemGrid>
 
-          <ItemGrid size={{ xs: 12 }}>
+          <ItemGrid sx={{ xs: 12, md: 6, lg: 4 }}>
             <InputText
               id="description"
               label="Descrição"
-              value={description}
+              value={description || ""}
               onChange={(e) => setField("description", e.target.value)}
               multiline
               rows={3}
             />
           </ItemGrid>
 
-          <ItemGrid size={{ xs: 12, md: 6 }}>
-            <FormLabel htmlFor="image">Imagem</FormLabel>
+          <ItemGrid sx={{ xs: 12, md: 6, lg: 4 }}>
+            <FormLabel htmlFor="image">Imagem (Opcional)</FormLabel>
             <input type="file" accept="image/*" onChange={handleImageSelect} />
             {imagePreview && (
               <Box
@@ -258,13 +246,17 @@ export function CreateProductForm() {
                 <img
                   src={imagePreview}
                   alt="Preview"
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                  }}
                 />
               </Box>
             )}
           </ItemGrid>
 
-          <Grid size={{ xs: 12 }} display="flex" alignItems="flex-end">
+          <Grid>
             <LoadingButton
               type="submit"
               variant="contained"
@@ -276,6 +268,7 @@ export function CreateProductForm() {
           </Grid>
         </Grid>
       </Box>
+
       <Snackbar
         open={notification.open}
         autoHideDuration={6000}
@@ -285,15 +278,7 @@ export function CreateProductForm() {
         <Alert
           onClose={() => setNotification({ ...notification, open: false })}
           severity={notification.severity}
-          sx={{
-            width: "100%",
-            minWidth: 360,
-            backgroundColor:
-              notification.severity === "error" ? "#E02041" : "#f25822",
-            color: "#fff",
-            fontWeight: 500,
-            borderRadius: 2,
-          }}
+          sx={{ width: "100%" }}
         >
           {notification.message}
         </Alert>

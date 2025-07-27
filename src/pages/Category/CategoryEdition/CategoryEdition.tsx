@@ -53,7 +53,7 @@ export function EditionCategoryForm() {
         name: initialData.name,
         description: initialData.description || "",
         status: initialData.status,
-        imageUrl: initialData.image || undefined,
+        image: initialData.image || undefined,
       });
       const fullImageUrl = `${initialData.image}`;
       setImagePreview(fullImageUrl);

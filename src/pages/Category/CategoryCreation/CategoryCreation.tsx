@@ -24,7 +24,7 @@ const ItemGrid = styled(Grid)({
 });
 
 export function CreateCategoryForm() {
-  const { name, description, imageUrl, status, setField, reset } =
+  const { name, description, image, status, setField, reset } =
     useCategoryFormStore();
   const { validate, errors } = useValidationCategoryForm();
   const { mutate, isLoading } = useFetchPostCategory();
