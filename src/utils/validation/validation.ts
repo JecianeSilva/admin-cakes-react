@@ -5,4 +5,6 @@ export const validation = {
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim()),
   phone: (value: string): boolean =>
     /^(\d{10,11})$/.test(value.replace(/\D/g, "")),
+  isAllowed: (value: string, allowedValues: string[]): boolean =>
+    allowedValues.includes(value),
 }

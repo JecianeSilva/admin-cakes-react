@@ -6,16 +6,16 @@ import {
   Typography,
   Snackbar,
   Alert,
-  SelectChangeEvent,
   Container,
   Card,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { useFetchPostCategory } from "../../../mutations/useFetchPostCategory";
-import { InputSelect, InputText } from "../../../components";
+import { InputText } from "../../../components";
 import { LoadingButton } from "@mui/lab";
 import { useValidationCategoryForm } from "./hook";
 import { useCategoryFormStore } from "../../../store";
+import { useNavigate } from "react-router-dom";
+import { useFetchPostCategory } from "../../../mutations";
 
 const ItemGrid = styled(Grid)({
   display: "flex",
@@ -24,6 +24,7 @@ const ItemGrid = styled(Grid)({
 });
 
 export function CreateCategoryForm() {
+  const navigate = useNavigate();
   const { name, description, image, status, setField, reset } =
     useCategoryFormStore();
   const { validate, errors } = useValidationCategoryForm();
@@ -50,10 +51,10 @@ export function CreateCategoryForm() {
     }
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!validate({ name, status })) {
+    if (!validate({ name })) {
       setNotification({
         open: true,
         message: "Por favor, corrija os erros do formulário.",
@@ -61,38 +62,37 @@ export function CreateCategoryForm() {
       });
       return;
     }
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("description", description || "");
-    formData.append("status", status);
-    if (imageFile) {
-      formData.append("image", imageFile);
-    }
 
-    mutate(formData, {
-      onSuccess: () => {
-        reset();
-        setImageFile(null);
-        setImagePreview(null);
-        setNotification({
-          open: true,
-          message: "Categoria cadastrado com sucesso!",
-          severity: "success",
-        });
+    const categoryData = {
+      name,
+      description: description || undefined,
+    };
 
-        window.location.href = "/categorias";
-      },
-      onError: (error) => {
-        console.error("Erro ao cadastrar categoria:", error);
-        setNotification({
-          open: true,
-          message:
-            (error.response?.data as any)?.message ||
-            "Erro ao cadastrar categoria",
-          severity: "error",
-        });
-      },
-    });
+    mutate(
+      { data: categoryData, image: imageFile },
+      {
+        onSuccess: () => {
+          reset();
+          setImageFile(null);
+          setImagePreview(null);
+          setNotification({
+            open: true,
+            message: "Categoria cadastrada com sucesso!",
+            severity: "success",
+          });
+          navigate("/categorias");
+        },
+        onError: (error: any) => {
+          const errorMessage =
+            error.response?.data?.message || "Erro ao cadastrar categoria";
+          setNotification({
+            open: true,
+            message: errorMessage,
+            severity: "error",
+          });
+        },
+      }
+    );
   };
 
   return (
@@ -119,27 +119,6 @@ export function CreateCategoryForm() {
                 required
                 error={!!errors.name}
                 helperText={errors.name}
-              />
-            </ItemGrid>
-            <ItemGrid size={{ xs: 12, md: 6, lg: 4 }}>
-              <InputSelect
-                id="status"
-                label="Status"
-                value={status}
-                onChange={(e: SelectChangeEvent<string>) =>
-                  setField("status", e.target.value)
-                }
-                options={[
-                  {
-                    value: "ACTIVATED",
-                    label: "Ativado",
-                  },
-                  { value: "DISABLED", label: "Desativado" },
-                ]}
-                error={!!errors.status}
-                helperText={errors.status}
-                disabled={isLoading}
-                required
               />
             </ItemGrid>
 

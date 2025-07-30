@@ -19,6 +19,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useFetchCategoryById } from "../../../queries";
 import { useCategoryFormStore } from "../../../store";
 import { useFetchPutCategory } from "../../../mutations";
+import { TPutCategoryRequestBody } from "cakes-lib-types-js";
+import { environment } from "../../../enrironments";
 
 const ItemGrid = styled(Grid)({
   display: "flex",
@@ -33,14 +35,14 @@ export function EditionCategoryForm() {
     id!
   );
 
-  const { name, description, status, setField, reset, setAllFields } =
+  const { name, description, status, image, setField, reset, setAllFields } =
     useCategoryFormStore();
   const { validate, errors } = useValidationCategoryForm();
   const { mutate: updateCategory, isLoading: isLoading } =
     useFetchPutCategory();
 
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | undefined>(image);
   const [notification, setNotification] = useState({
     open: false,
     message: "",
@@ -53,9 +55,9 @@ export function EditionCategoryForm() {
         name: initialData.name,
         description: initialData.description || "",
         status: initialData.status,
-        image: initialData.imageUrl || undefined,
+        image: initialData.image || undefined,
       });
-      const fullImageUrl = `${initialData.imageUrl}`;
+      const fullImageUrl = `${environment.VITE_API_IMAGE_URL}${initialData.image}`;
       setImagePreview(fullImageUrl);
     }
     return () => reset();
@@ -69,7 +71,7 @@ export function EditionCategoryForm() {
       reader.onloadend = () => setImagePreview(reader.result as string);
       reader.readAsDataURL(file);
     } else {
-      setImagePreview(initialData?.imageUrl || null);
+      setImagePreview(initialData?.image || undefined);
     }
   };
 
@@ -84,33 +86,34 @@ export function EditionCategoryForm() {
       return;
     }
 
-    const categoryUpdateData = {
+    const categoryUpdateData: TPutCategoryRequestBody = {
       name,
       description: description || undefined,
+      status: status,
     };
 
-    // updateCategory(
-    //   { id: id!, variables: { data: categoryUpdateData, image: imageFile } },
-    //   {
-    //     onSuccess: () => {
-    //       setNotification({
-    //         open: true,
-    //         message: "Categoria atualizada com sucesso!",
-    //         severity: "success",
-    //       });
-    //       navigate("/categories");
-    //     },
-    //     onError: (error: any) => {
-    //       const errorMessage =
-    //         error.response?.data?.message || "Erro ao atualizar categoria";
-    //       setNotification({
-    //         open: true,
-    //         message: errorMessage,
-    //         severity: "error",
-    //       });
-    //     },
-    //   }
-    // );
+    updateCategory(
+      { id: id!, data: categoryUpdateData, image: imageFile },
+      {
+        onSuccess: () => {
+          setNotification({
+            open: true,
+            message: "Categoria atualizada com sucesso!",
+            severity: "success",
+          });
+          navigate("/categorias");
+        },
+        onError: (error: any) => {
+          const errorMessage =
+            error.response?.data?.message || "Erro ao atualizar categoria";
+          setNotification({
+            open: true,
+            message: errorMessage,
+            severity: "error",
+          });
+        },
+      }
+    );
   };
 
   if (isLoadingData) {

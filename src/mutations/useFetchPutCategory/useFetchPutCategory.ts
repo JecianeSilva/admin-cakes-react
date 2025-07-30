@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { ICategory, TPutCategoryRequestBody } from 'cakes-lib-types-js';
 import { authorizedApi } from 'src/services';
@@ -9,11 +9,8 @@ type TUpdateCategoryVariables = {
   image?: File | null;
 };
 
-async function updateCategory(
-  variables: TUpdateCategoryVariables,
-): Promise<ICategory> {
+async function updateCategory(variables: TUpdateCategoryVariables): Promise<ICategory> {
   const { id, data, image } = variables;
-  
   const formData = new FormData();
 
   if (data.name) {
@@ -22,31 +19,20 @@ async function updateCategory(
   if (data.description) {
     formData.append('description', data.description);
   }
-
+  
+  if (data.status) {
+    formData.append('status', data.status);
+  }
   if (image) {
     formData.append('image', image);
   }
 
-  const response = await authorizedApi.put(
-    `/cakes-bff/category/${id}`,
-    formData,
-  );
-  
+  const response = await authorizedApi.put(`/cakes-bff/category/${id}`, formData);
   return response.data;
 }
 
-export function useFetchPutCategory() { 
-  const queryClient = useQueryClient();
-
-  return useMutation<
-    ICategory,
-    AxiosError, 
-    TUpdateCategoryVariables 
-  >({
+export function useFetchPutCategory() {
+  return useMutation<ICategory, AxiosError, TUpdateCategoryVariables>({
     mutationFn: updateCategory,
-    onSuccess: (updatedCategory) => {
-      queryClient.invalidateQueries({ queryKey: ['categories'] });
-      queryClient.setQueryData(['category', updatedCategory.id], updatedCategory);
-    },
   });
 }
