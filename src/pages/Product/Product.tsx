@@ -24,7 +24,7 @@ export function Product() {
   });
 
   const handleEdit = (id: string | number) => {
-    navigate(`/produto/editar/${id}`);
+    navigate(`/produtos/editar/${id}`);
   };
 
   const handleCreate = () => {

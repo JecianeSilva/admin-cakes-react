@@ -16,6 +16,7 @@ import { useValidationCategoryForm } from "./hook";
 import { useCategoryFormStore } from "../../../store";
 import { useNavigate } from "react-router-dom";
 import { useFetchPostCategory } from "../../../mutations";
+import { TPostSaveCategoryRequestBody } from "cakes-lib-types-js";
 
 const ItemGrid = styled(Grid)({
   display: "flex",
@@ -63,7 +64,7 @@ export function CreateCategoryForm() {
       return;
     }
 
-    const categoryData = {
+    const categoryData: TPostSaveCategoryRequestBody = {
       name,
       description: description || undefined,
     };

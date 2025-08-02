@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   FormLabel,
@@ -12,13 +12,20 @@ import {
   Card,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { useProductFormStore } from "./store";
 import { useValidationProductForm } from "./hook/useValidationProductForm";
 import { LoadingButton } from "@mui/lab";
 import { InputText, InputSelect, InputPrice } from "../../../components";
 import { useFetchCategories } from "../../../queries";
 import { useFetchPostProduct } from "../../../mutations";
-import { TPostSaveProductRequestBody } from "cakes-lib-types-js";
+import {
+  TPostSaveProductRequestBody,
+  TPutProductRequestBody,
+} from "cakes-lib-types-js";
+import { useNavigate, useParams } from "react-router-dom";
+import { useFetchPutProduct } from "../../../mutations/useFetchPutProduct";
+import { environment } from "../../../enrironments";
+import { useProductFormStore } from "../ProductCreation/store";
+import { useFetchProductById } from "../../../queries/getProductById";
 
 const ItemGrid = styled(Grid)({
   display: "flex",
@@ -26,7 +33,12 @@ const ItemGrid = styled(Grid)({
   gap: 4,
 });
 
-export function CreateProductForm() {
+export function EditionProductForm() {
+  const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
+  const { data: initialData, isLoading: isLoadingData } = useFetchProductById(
+    id!
+  );
   const {
     name,
     price,
@@ -38,17 +50,18 @@ export function CreateProductForm() {
     flavor,
     status,
     setField,
+    setAllFields,
     reset,
   } = useProductFormStore();
   const { validate, errors } = useValidationProductForm();
-
   const {
     data: categoriesData,
     isLoading: isCategoriesLoading,
     isError: isCategoriesError,
   } = useFetchCategories({});
 
-  const { mutate, isLoading: isProductPending } = useFetchPostProduct();
+  const { mutate: updateProduct, isLoading: isLoadingProduct } =
+    useFetchPutProduct();
 
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -57,6 +70,26 @@ export function CreateProductForm() {
     message: "",
     severity: "success" as "success" | "error",
   });
+
+  useEffect(() => {
+    if (initialData) {
+      setAllFields({
+        name: initialData.name,
+        categoryId: initialData.category.id,
+        dough: initialData.dough,
+        filling: initialData.filling,
+        flavor: initialData.flavor,
+        price: String(initialData.price),
+        size: initialData.size,
+        description: initialData.description || "",
+        status: initialData.status,
+        imageUrl: initialData.imageUrl || undefined,
+      });
+      const fullImageUrl = `${environment.VITE_API_IMAGE_URL}${initialData.imageUrl}`;
+      setImagePreview(fullImageUrl);
+    }
+    return () => reset();
+  }, [initialData, setAllFields, reset]);
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
@@ -82,7 +115,7 @@ export function CreateProductForm() {
       return;
     }
 
-    const productData: TPostSaveProductRequestBody = {
+    const productData: TPutProductRequestBody = {
       name,
       description,
       status,
@@ -94,16 +127,13 @@ export function CreateProductForm() {
       price: Number(price.replace(",", ".")),
     };
 
-    mutate(
-      { data: productData, image: imageFile },
+    updateProduct(
+      { id: id!, data: productData, image: imageFile },
       {
         onSuccess: () => {
-          reset();
-          setImageFile(null);
-          setImagePreview(null);
           setNotification({
             open: true,
-            message: "Produto cadastrado com sucesso!",
+            message: "Produto atualizado com sucesso!",
             severity: "success",
           });
 
@@ -111,7 +141,7 @@ export function CreateProductForm() {
         },
         onError: (error: any) => {
           const errorMessage =
-            error.response?.data?.message || "Erro ao cadastrar produto";
+            error.response?.data?.message || "Erro ao atualizar produto";
           setNotification({
             open: true,
             message: errorMessage,
@@ -122,12 +152,18 @@ export function CreateProductForm() {
     );
   };
 
-  const isLoading = isCategoriesLoading || isProductPending;
+  if (isLoadingData) {
+    return (
+      <Box display="flex" justifyContent="center" py={5}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Container maxWidth={false} sx={{ marginLeft: "unset", maxWidth: "100%" }}>
       <Typography variant="h6" gutterBottom marginBottom={2}>
-        Cadastro de Produto
+        Editar Produto
       </Typography>
       <Box
         component="form"
@@ -276,9 +312,9 @@ export function CreateProductForm() {
                 type="submit"
                 variant="contained"
                 color="primary"
-                loading={isLoading}
+                loading={isLoadingProduct}
               >
-                Cadastrar produto
+                Salvar
               </LoadingButton>
             </Grid>
           </Grid>

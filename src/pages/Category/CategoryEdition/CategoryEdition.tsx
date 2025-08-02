@@ -126,7 +126,7 @@ export function EditionCategoryForm() {
 
   return (
     <Container maxWidth={false} sx={{ marginLeft: "unset", maxWidth: "100%" }}>
-      <Typography variant="h5" gutterBottom>
+      <Typography variant="h5" gutterBottom marginBottom={2}>
         Editar Categoria
       </Typography>
       <Box

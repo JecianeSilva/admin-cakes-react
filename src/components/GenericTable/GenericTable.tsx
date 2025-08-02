@@ -12,9 +12,16 @@ import {
   Typography,
   Paper,
   TablePagination,
+  Button,
 } from "@mui/material";
-import { Delete, Edit } from "@mui/icons-material";
+import {
+  AddAlertOutlined,
+  Delete,
+  Edit,
+  WarningAmber,
+} from "@mui/icons-material";
 import { ITableGenericProps } from "./GenericTable.types";
+import { EmptyState } from "../EmptyState/EmptyState";
 
 export function TableGeneric<T>({
   data,
@@ -50,9 +57,11 @@ export function TableGeneric<T>({
 
   if (!data || data.length === 0) {
     return (
-      <Box py={4}>
-        <Typography align="center">Nenhum dado encontrado.</Typography>
-      </Box>
+      <EmptyState
+        icon={<WarningAmber sx={{ fontSize: 48 }} color={"primary"} />}
+        title={"Nenhum dado encontrado"}
+        description={""}
+      />
     );
   }
 
@@ -101,13 +110,13 @@ export function TableGeneric<T>({
                         </IconButton>
                       </Tooltip>
                     )}
-                    {onDelete && (
+                    {/* {onDelete && (
                       <Tooltip title="Excluir">
                         <IconButton onClick={() => onDelete(getId(row))}>
                           <Delete fontSize="small" />
                         </IconButton>
                       </Tooltip>
-                    )}
+                    )} */}
                   </TableCell>
                 )}
               </TableRow>

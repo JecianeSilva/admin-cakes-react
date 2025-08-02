@@ -10,5 +10,6 @@ export interface IProductForm {
   flavor: string;
   status: 'ACTIVATED' | 'DISABLED';
   setField: (field: keyof Omit<IProductForm, 'setField' | 'reset'>, value: any) => void;
+  setAllFields: (data: Partial<Omit<IProductForm, 'setField' | 'reset' | 'setAllFields'>>) => void;
   reset: () => void;
 }

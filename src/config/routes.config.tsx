@@ -1,11 +1,19 @@
 import { ReactNode } from "react";
 import { Navigate, createBrowserRouter } from "react-router-dom";
-import { SignIn, DashBoard, Category, Register, Product } from "src/pages";
+import {
+  SignIn,
+  Category,
+  Register,
+  Product,
+  Dashboard,
+  Client,
+  Order,
+} from "src/pages";
 import { Layout } from "src/components";
 import { CreateCategoryForm } from "../pages/Category/CategoryCreation";
 import { EditionCategoryForm } from "../pages/Category/CategoryEdition";
 import { CreateProductForm } from "../pages/Product/ProductCreation";
-// import { Users, Products, Categories, Orders } from "src/pages";
+import { EditionProductForm } from "../pages/Product/ProductEdition";
 
 interface PrivateRouteProps {
   children: ReactNode;
@@ -23,19 +31,17 @@ export const publicRoutes = [
 ];
 
 export const privateRoutes = [
-  { path: "/", element: <DashBoard /> },
-  { path: "/clientes", element: <Category /> },
+  { path: "/", element: <Dashboard /> },
   { path: "/categorias", element: <Category /> },
   { path: "/categorias/cadastrar", element: <CreateCategoryForm /> },
   { path: "/categorias/editar/:id", element: <EditionCategoryForm /> },
 
   { path: "/produtos", element: <Product /> },
   { path: "/produtos/cadastrar", element: <CreateProductForm /> },
-  { path: "/produtos/editar", element: <CreateProductForm /> },
+  { path: "/produtos/editar/:id", element: <EditionProductForm /> },
 
-  { path: "/pedidos", element: <Product /> },
-  // { path: "/pedidos/cadastrar", element: <Order /> },
-  // { path: "/pedidos/editar", element: <Order /> },
+  { path: "/clientes", element: <Client /> },
+  { path: "/pedidos", element: <Order /> },
 ];
 
 export const routes = createBrowserRouter([

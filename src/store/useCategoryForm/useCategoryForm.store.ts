@@ -2,7 +2,7 @@
 import { create } from 'zustand'
 import { ICategoryForm } from './useCategoryForm.types'
 
-const defaultValues: Omit<ICategoryForm, 'setField' | 'reset'> = {
+const defaultValues: Omit<ICategoryForm, 'setField' | 'reset' | 'setAllFields'> = {
   name: '',
   description: '',
   image: '',

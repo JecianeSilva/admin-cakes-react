@@ -15,13 +15,13 @@ async function postProduct(variables: TPostProductVariables): Promise<IPostSaveP
   formData.append('name', data.name);
   formData.append('price', String(data.price));
   formData.append('categoryId', data.categoryId);
-  formData.append('status', data.status || "ACTIVATED");
+  // formData.append('status', data.status || "ACTIVATED");
 
   if (data.description) formData.append('description', data.description);
+  if (data.flavor) formData.append('flavor', data.flavor);
   if (data.size) formData.append('size', data.size);
   if (data.filling) formData.append('filling', data.filling);
   if (data.dough) formData.append('dough', data.dough);
-  if (data.flavor) formData.append('flavor', data.flavor);
 
   if (image) {
     formData.append('image', image);

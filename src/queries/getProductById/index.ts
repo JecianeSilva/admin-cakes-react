@@ -1,1 +1,1 @@
-export * from './getCategoryById'
+export * from './getProductById'

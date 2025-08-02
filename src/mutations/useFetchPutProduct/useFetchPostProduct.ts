@@ -16,7 +16,7 @@ async function updateProduct(variables: TUpdateProductVariables): Promise<IProdu
   if (data.name) formData.append('name', data.name);
   if (data.price) formData.append('price', String(data.price));
   if (data.categoryId) formData.append('categoryId', data.categoryId);
-  if (data.status) formData.append('status', data.status);
+  // if (data.status) formData.append('status', data.status);
   if (data.description) formData.append('description', data.description);
   if (data.size) formData.append('size', data.size);
   if (data.filling) formData.append('filling', data.filling);
